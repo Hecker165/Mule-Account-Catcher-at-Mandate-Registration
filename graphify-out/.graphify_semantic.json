@@ -1,0 +1,459 @@
+{
+  "nodes": [
+    {
+      "id": "idea_document",
+      "label": "Mule Account Catcher at Mandate Registration Idea",
+      "file_type": "document",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "idea_mule_account",
+      "label": "Mule Account",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "idea_upi_mandate_registration",
+      "label": "UPI Autopay Mandate Registration",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Identified as the earliest merchant-visible intervention point, before any meaningful debit occurs."
+    },
+    {
+      "id": "idea_razorpay_webhook_receiver",
+      "label": "Razorpay Webhook Receiver",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "idea_token_confirmed",
+      "label": "token.confirmed Webhook Event",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "idea_token_rejected",
+      "label": "token.rejected Webhook Event",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "idea_feature_extraction_engine",
+      "label": "Feature Extraction Engine",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Transforms webhook payloads and captured session context into risk signals within a target of 200 ms."
+    },
+    {
+      "id": "idea_velocity_features",
+      "label": "Mandate Velocity Features",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "idea_device_behavior_features",
+      "label": "Device and Behavioral Features",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "idea_network_features",
+      "label": "Network Reputation Features",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "idea_npci_risk_flag",
+      "label": "NPCI Registration-Time Risk Flag",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "The document identifies an NPCI risk rejection exposed through Razorpay as the strongest merchant-available real-time risk signal."
+    },
+    {
+      "id": "idea_mandate_parameter_features",
+      "label": "Mandate Parameter Features",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "idea_cross_merchant_velocity",
+      "label": "Simulated Cross-Merchant Velocity",
+      "file_type": "rationale",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Uses a shared Redis namespace across test merchant accounts for the demo because real cross-merchant Razorpay data is unavailable to merchants."
+    },
+    {
+      "id": "idea_risk_scoring_model",
+      "label": "Risk Scoring Model",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "May begin as a rule ensemble and later use gradient-boosted trees trained with historical, public, and synthetic fraud data."
+    },
+    {
+      "id": "idea_allow_challenge_block",
+      "label": "Allow Challenge Block Decisioning",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "idea_step_up_authentication",
+      "label": "Step-Up Authentication",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Challenge actions must occur before the customer reaches the UPI application, at order creation or authorization stage."
+    },
+    {
+      "id": "idea_razorpay_token_revoke",
+      "label": "Razorpay Token Revoke Action",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "A block decision following token.confirmed revokes the registered mandate before a value debit."
+    },
+    {
+      "id": "idea_audit_dashboard",
+      "label": "Explainable Audit Dashboard",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null
+    },
+    {
+      "id": "idea_mulehunter_ai",
+      "label": "MuleHunter.AI",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "It is bank-level infrastructure rather than a public merchant API; the proposed project is a complementary merchant-layer system."
+    },
+    {
+      "id": "idea_tpv",
+      "label": "Third-Party Validation",
+      "file_type": "concept",
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "source_url": null,
+      "captured_at": null,
+      "author": null,
+      "contributor": null,
+      "rationale": "Requires bank account details and eligibility, so it cannot be assumed for a pure VPA-based UPI Intent flow."
+    }
+  ],
+  "edges": [
+    {
+      "source": "idea_document",
+      "target": "idea_mule_account",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_document",
+      "target": "idea_upi_mandate_registration",
+      "relation": "references",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_razorpay_webhook_receiver",
+      "target": "idea_token_confirmed",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_razorpay_webhook_receiver",
+      "target": "idea_token_rejected",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_token_confirmed",
+      "target": "idea_feature_extraction_engine",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_token_rejected",
+      "target": "idea_feature_extraction_engine",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_feature_extraction_engine",
+      "target": "idea_velocity_features",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_feature_extraction_engine",
+      "target": "idea_device_behavior_features",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_feature_extraction_engine",
+      "target": "idea_network_features",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_feature_extraction_engine",
+      "target": "idea_npci_risk_flag",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_feature_extraction_engine",
+      "target": "idea_mandate_parameter_features",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_cross_merchant_velocity",
+      "target": "idea_velocity_features",
+      "relation": "conceptually_related_to",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_feature_extraction_engine",
+      "target": "idea_risk_scoring_model",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_risk_scoring_model",
+      "target": "idea_allow_challenge_block",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_allow_challenge_block",
+      "target": "idea_step_up_authentication",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_allow_challenge_block",
+      "target": "idea_razorpay_token_revoke",
+      "relation": "implements",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_risk_scoring_model",
+      "target": "idea_audit_dashboard",
+      "relation": "shares_data_with",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_upi_mandate_registration",
+      "target": "idea_mulehunter_ai",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.75,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    },
+    {
+      "source": "idea_tpv",
+      "target": "idea_step_up_authentication",
+      "relation": "semantically_similar_to",
+      "confidence": "INFERRED",
+      "confidence_score": 0.65,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md",
+      "source_location": null,
+      "weight": 1.0
+    }
+  ],
+  "hyperedges": [
+    {
+      "id": "idea_mandate_risk_pipeline",
+      "label": "Mandate Registration Risk Pipeline",
+      "nodes": [
+        "idea_razorpay_webhook_receiver",
+        "idea_feature_extraction_engine",
+        "idea_risk_scoring_model",
+        "idea_allow_challenge_block",
+        "idea_audit_dashboard"
+      ],
+      "relation": "participate_in",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md"
+    },
+    {
+      "id": "idea_feature_categories",
+      "label": "Risk Feature Categories",
+      "nodes": [
+        "idea_velocity_features",
+        "idea_device_behavior_features",
+        "idea_network_features",
+        "idea_npci_risk_flag",
+        "idea_mandate_parameter_features"
+      ],
+      "relation": "form",
+      "confidence": "EXTRACTED",
+      "confidence_score": 1.0,
+      "source_file": "D:\\Coding\\projects\\AI_Apps\\Mule Account Catcher at Mandate Registration\\Idea.md"
+    }
+  ],
+  "input_tokens": 0,
+  "output_tokens": 0
+}

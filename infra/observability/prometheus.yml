@@ -1,0 +1,1 @@
+# A10 Prometheus scrape configuration for the local stack (scrape the API /metrics endpoint).

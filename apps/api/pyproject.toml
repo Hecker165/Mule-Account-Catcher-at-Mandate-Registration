@@ -1,0 +1,6 @@
+# A0 owns Python packaging and development dependencies.
+[project]
+name = "mandate-guardian-api"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = []

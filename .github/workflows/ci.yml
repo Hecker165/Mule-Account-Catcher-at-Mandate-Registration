@@ -1,0 +1,4 @@
+# A10 owns the CI workflow. This file exists to reserve the integration path.
+name: CI
+on: [push]
+jobs: {}

@@ -1,0 +1,131 @@
+{
+  "communities": {
+    "0": [
+      "idea_device_behavior_features",
+      "idea_feature_extraction_engine",
+      "idea_mandate_parameter_features",
+      "idea_network_features",
+      "idea_npci_risk_flag",
+      "idea_razorpay_webhook_receiver",
+      "idea_token_confirmed",
+      "idea_token_rejected"
+    ],
+    "1": [
+      "idea_allow_challenge_block",
+      "idea_audit_dashboard",
+      "idea_razorpay_token_revoke",
+      "idea_risk_scoring_model",
+      "idea_step_up_authentication",
+      "idea_tpv"
+    ],
+    "2": [
+      "idea_document",
+      "idea_mule_account",
+      "idea_mulehunter_ai",
+      "idea_upi_mandate_registration"
+    ],
+    "3": [
+      "idea_cross_merchant_velocity",
+      "idea_velocity_features"
+    ]
+  },
+  "cohesion": {
+    "0": 0.2857142857142857,
+    "1": 0.3333333333333333,
+    "2": 0.5,
+    "3": 1.0
+  },
+  "gods": [
+    {
+      "id": "idea_feature_extraction_engine",
+      "label": "Feature Extraction Engine",
+      "degree": 8
+    },
+    {
+      "id": "idea_risk_scoring_model",
+      "label": "Risk Scoring Model",
+      "degree": 3
+    },
+    {
+      "id": "idea_allow_challenge_block",
+      "label": "Allow Challenge Block Decisioning",
+      "degree": 3
+    },
+    {
+      "id": "idea_document",
+      "label": "Mule Account Catcher at Mandate Registration Idea",
+      "degree": 2
+    },
+    {
+      "id": "idea_upi_mandate_registration",
+      "label": "UPI Autopay Mandate Registration",
+      "degree": 2
+    },
+    {
+      "id": "idea_razorpay_webhook_receiver",
+      "label": "Razorpay Webhook Receiver",
+      "degree": 2
+    },
+    {
+      "id": "idea_token_confirmed",
+      "label": "token.confirmed Webhook Event",
+      "degree": 2
+    },
+    {
+      "id": "idea_token_rejected",
+      "label": "token.rejected Webhook Event",
+      "degree": 2
+    },
+    {
+      "id": "idea_velocity_features",
+      "label": "Mandate Velocity Features",
+      "degree": 2
+    },
+    {
+      "id": "idea_step_up_authentication",
+      "label": "Step-Up Authentication",
+      "degree": 2
+    }
+  ],
+  "surprises": [
+    {
+      "source": "Feature Extraction Engine",
+      "target": "Risk Scoring Model",
+      "source_files": [
+        "Idea.md",
+        "Idea.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "shares_data_with",
+      "note": "Bridges community 0 → community 1"
+    },
+    {
+      "source": "Feature Extraction Engine",
+      "target": "Mandate Velocity Features",
+      "source_files": [
+        "Idea.md",
+        "Idea.md"
+      ],
+      "confidence": "EXTRACTED",
+      "relation": "implements",
+      "note": "Bridges community 0 → community 3"
+    }
+  ],
+  "questions": [
+    {
+      "type": "bridge_node",
+      "question": "Why does `Feature Extraction Engine` connect `Community 0` to `Community 1`, `Community 3`?",
+      "why": "High betweenness centrality (0.506) - this node is a cross-community bridge."
+    },
+    {
+      "type": "bridge_node",
+      "question": "Why does `Risk Scoring Model` connect `Community 1` to `Community 0`?",
+      "why": "High betweenness centrality (0.316) - this node is a cross-community bridge."
+    },
+    {
+      "type": "isolated_nodes",
+      "question": "What connects `Mule Account`, `Device and Behavioral Features`, `Network Reputation Features` to the rest of the system?",
+      "why": "9 weakly-connected nodes found - possible documentation gaps or missing edges."
+    }
+  ]
+}
