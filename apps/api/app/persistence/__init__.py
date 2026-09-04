@@ -1,1 +1,87 @@
-"""A1 owns the PostgreSQL persistence boundary."""
+"""A1 persistence package exports."""
+
+from app.persistence.audit_chain import (
+    AuditVerificationResult,
+    compute_event_hash,
+    compute_next_hash,
+    verify_audit_chain,
+)
+from app.persistence.base import Base
+from app.persistence.models import (
+    ActionAttempt,
+    ActionRequest,
+    AuditEvent,
+    FeatureSnapshot,
+    MandateWebhookEvent,
+    OutboxMessage,
+    RiskAssessment,
+    RiskSession,
+    RuleEvaluation,
+)
+from app.persistence.outbox import OutboxRepository
+from app.persistence.session import (
+    dispose_engine,
+    get_engine,
+    get_session_factory,
+    transaction,
+)
+from app.persistence.types import (
+    action_attempt_from_row,
+    action_attempt_to_row,
+    action_request_from_row,
+    action_request_to_row,
+    audit_event_from_row,
+    audit_event_to_row,
+    feature_snapshot_from_row,
+    feature_snapshot_to_row,
+    mandate_event_from_row,
+    mandate_event_to_row,
+    outbox_message_from_row,
+    outbox_message_to_row,
+    risk_assessment_from_row,
+    risk_assessment_to_row,
+    risk_session_from_row,
+    risk_session_to_row,
+    rule_evaluation_from_row,
+    rule_evaluation_to_row,
+)
+
+__all__ = [
+    "Base",
+    "get_engine",
+    "get_session_factory",
+    "transaction",
+    "dispose_engine",
+    "RiskSession",
+    "MandateWebhookEvent",
+    "FeatureSnapshot",
+    "RiskAssessment",
+    "RuleEvaluation",
+    "ActionRequest",
+    "ActionAttempt",
+    "OutboxMessage",
+    "AuditEvent",
+    "risk_session_to_row",
+    "risk_session_from_row",
+    "mandate_event_to_row",
+    "mandate_event_from_row",
+    "feature_snapshot_to_row",
+    "feature_snapshot_from_row",
+    "risk_assessment_to_row",
+    "risk_assessment_from_row",
+    "rule_evaluation_to_row",
+    "rule_evaluation_from_row",
+    "action_request_to_row",
+    "action_request_from_row",
+    "action_attempt_to_row",
+    "action_attempt_from_row",
+    "audit_event_to_row",
+    "audit_event_from_row",
+    "outbox_message_to_row",
+    "outbox_message_from_row",
+    "OutboxRepository",
+    "compute_event_hash",
+    "compute_next_hash",
+    "verify_audit_chain",
+    "AuditVerificationResult",
+]
