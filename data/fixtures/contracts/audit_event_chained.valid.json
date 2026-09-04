@@ -1,0 +1,17 @@
+{
+  "schema_version": "1.0",
+  "audit_event_id": "c9d0e1f2-a3b4-4c5d-6e7f-809102132435",
+  "aggregate_type": "risk_assessment",
+  "aggregate_id": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8091",
+  "sequence_number": 2,
+  "event_type": "risk_assessment.action_queued",
+  "actor_type": "SYSTEM",
+  "actor_id": null,
+  "occurred_at": "2026-01-15T10:02:04Z",
+  "redacted_payload": {
+    "action_type": "TOKEN_REVOKE",
+    "token_id": "token_demo123"
+  },
+  "previous_event_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "event_hash": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb"
+}

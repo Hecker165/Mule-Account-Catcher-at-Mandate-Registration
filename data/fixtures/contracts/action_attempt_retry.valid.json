@@ -1,0 +1,12 @@
+{
+  "schema_version": "1.0",
+  "action_attempt_id": "a7b8c9d0-e1f2-4a3b-4c5d-6e7f80910213",
+  "action_request_id": "f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f809102",
+  "attempt_number": 2,
+  "status": "RETRYING",
+  "provider_status_code": 503,
+  "safe_error_code": "PROVIDER_UNAVAILABLE",
+  "safe_error_message": "Token revoke service temporarily unavailable.",
+  "attempted_at": "2026-01-15T10:02:35Z",
+  "completed_at": null
+}

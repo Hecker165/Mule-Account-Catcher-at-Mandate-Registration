@@ -1,0 +1,56 @@
+{
+  "fixtures": {
+    "risk_session_create.valid.json": {
+      "model": "app.contracts.risk_session.RiskSessionCreateRequest",
+      "valid": true
+    },
+    "risk_session.valid.json": {
+      "model": "app.contracts.risk_session.RiskSession",
+      "valid": true
+    },
+    "risk_session_invalid_namespace.json": {
+      "model": "app.contracts.risk_session.RiskSessionCreateRequest",
+      "valid": false
+    },
+    "mandate_event_confirmed.valid.json": {
+      "model": "app.contracts.mandate_event.MandateWebhookEvent",
+      "valid": true
+    },
+    "mandate_event_rejected_npci_risk.valid.json": {
+      "model": "app.contracts.mandate_event.MandateWebhookEvent",
+      "valid": true
+    },
+    "feature_snapshot_bot_burst.valid.json": {
+      "model": "app.contracts.feature_snapshot.FeatureSnapshot",
+      "valid": true
+    },
+    "feature_snapshot_invalid_demo_flag.json": {
+      "model": "app.contracts.feature_snapshot.FeatureSnapshot",
+      "valid": false
+    },
+    "risk_assessment_block.valid.json": {
+      "model": "app.contracts.risk_assessment.RiskAssessment",
+      "valid": true
+    },
+    "risk_assessment_invalid_score.json": {
+      "model": "app.contracts.risk_assessment.RiskAssessment",
+      "valid": false
+    },
+    "action_request_revoke.valid.json": {
+      "model": "app.contracts.action.ActionRequest",
+      "valid": true
+    },
+    "action_attempt_retry.valid.json": {
+      "model": "app.contracts.action.ActionAttempt",
+      "valid": true
+    },
+    "audit_event_first.valid.json": {
+      "model": "app.contracts.audit.AuditEvent",
+      "valid": true
+    },
+    "audit_event_chained.valid.json": {
+      "model": "app.contracts.audit.AuditEvent",
+      "valid": true
+    }
+  }
+}

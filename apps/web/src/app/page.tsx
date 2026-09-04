@@ -1,3 +1,7 @@
 export default function Page() {
-  return <main>Foundation placeholder</main>;
+  return (
+    <main>
+      <h1>Foundation ready</h1>
+    </main>
+  );
 }

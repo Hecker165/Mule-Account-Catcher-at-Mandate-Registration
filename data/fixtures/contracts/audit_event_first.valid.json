@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "audit_event_id": "b8c9d0e1-f2a3-4b4c-5d6e-7f8091021324",
+  "aggregate_type": "risk_assessment",
+  "aggregate_id": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8091",
+  "sequence_number": 1,
+  "event_type": "risk_assessment.created",
+  "actor_type": "SYSTEM",
+  "actor_id": null,
+  "occurred_at": "2026-01-15T10:02:03Z",
+  "redacted_payload": {
+    "decision": "BLOCK",
+    "score": 100,
+    "stage": "POST_CONFIRMATION"
+  },
+  "previous_event_hash": null,
+  "event_hash": "sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+}

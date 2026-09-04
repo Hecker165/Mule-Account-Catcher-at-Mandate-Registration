@@ -1,0 +1,38 @@
+{
+  "entity": "event",
+  "account_id": "acc_demo_123",
+  "event": "token.rejected",
+  "contains": [
+    "token"
+  ],
+  "payload": {
+    "token": {
+      "entity": {
+        "id": "token_demo456",
+        "entity": "token",
+        "token": "token_demo456",
+        "bank": null,
+        "wallet": null,
+        "method": "upi",
+        "recurring_details": {
+          "status": "rejected",
+          "failure_reason": "Mandate rejected: NPCI risk flag raised by payer bank"
+        },
+        "recurring_status": "rejected",
+        "auth_type": "",
+        "mrn": null,
+        "used_at": 1705313400,
+        "created_at": 1705313400,
+        "expired_at": null,
+        "dcc_data": null,
+        "billing_address": null,
+        "notes": [],
+        "vpa": {
+          "username": "demo.user2",
+          "handle": "upi"
+        }
+      }
+    }
+  },
+  "created_at": 1705313400
+}

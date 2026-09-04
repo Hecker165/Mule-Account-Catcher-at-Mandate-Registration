@@ -1,0 +1,11 @@
+{
+  "schema_version": "1.0",
+  "action_request_id": "f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f809102",
+  "assessment_id": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8091",
+  "mandate_event_id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+  "action_type": "TOKEN_REVOKE",
+  "token_id": "token_demo123",
+  "idempotency_key": "revoke-token_demo123-e5f6a7b8",
+  "status": "QUEUED",
+  "requested_at": "2026-01-15T10:02:04Z"
+}

@@ -1,0 +1,18 @@
+{
+  "schema_version": "1.0",
+  "feature_snapshot_id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80",
+  "mandate_event_id": null,
+  "risk_session_id": null,
+  "feature_version": "rules-v1",
+  "calculated_at": "2026-01-15T10:02:02Z",
+  "ip_velocity_5m": 1,
+  "shared_demo_merchant_count_1h": 3,
+  "sources": {
+    "shared_demo_merchant_count_1h": {
+      "availability": "AVAILABLE",
+      "source": "demo-shared-namespace",
+      "captured_at": "2026-01-15T10:02:01Z"
+    }
+  },
+  "is_demo_simulation": false
+}

@@ -1,0 +1,38 @@
+{
+  "entity": "event",
+  "account_id": "acc_demo_123",
+  "event": "token.confirmed",
+  "contains": [
+    "token"
+  ],
+  "payload": {
+    "token": {
+      "entity": {
+        "id": "token_demo123",
+        "entity": "token",
+        "token": "token_demo123",
+        "bank": null,
+        "wallet": null,
+        "method": "upi",
+        "recurring_details": {
+          "status": "confirmed",
+          "failure_reason": null
+        },
+        "recurring_status": "confirmed",
+        "auth_type": "",
+        "mrn": null,
+        "used_at": 1705312800,
+        "created_at": 1705312800,
+        "expired_at": null,
+        "dcc_data": null,
+        "billing_address": null,
+        "notes": [],
+        "vpa": {
+          "username": "demo.user",
+          "handle": "upi"
+        }
+      }
+    }
+  },
+  "created_at": 1705312920
+}

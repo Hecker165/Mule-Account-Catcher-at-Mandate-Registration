@@ -1,0 +1,22 @@
+{
+  "schema_version": "1.0",
+  "assessment_id": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8091",
+  "risk_session_id": null,
+  "mandate_event_id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+  "feature_snapshot_id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80",
+  "stage": "POST_CONFIRMATION",
+  "score": 150,
+  "decision": "BLOCK",
+  "engine_version": "rules-v1",
+  "rule_evaluations": [
+    {
+      "rule_id": "ip_velocity_5m_high",
+      "triggered": true,
+      "points": 30,
+      "reason_code": "IP_VELOCITY_5M",
+      "reason_text": "IP velocity exceeded threshold."
+    }
+  ],
+  "evaluation_latency_ms": 5,
+  "assessed_at": "2026-01-15T10:02:03Z"
+}

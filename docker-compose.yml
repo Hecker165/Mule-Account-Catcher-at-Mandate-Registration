@@ -1,2 +1,68 @@
-# A0 owns the local development stack. See docs/work-packages/A0_FOUNDATION_AND_CONTRACTS.md.
-services: {}
+services:
+  postgres:
+    image: postgres:16-alpine
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_DB: mandate_guardian
+      POSTGRES_USER: mandate_guardian
+      POSTGRES_PASSWORD: mandate_guardian
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U mandate_guardian"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  redis:
+    image: redis:7-alpine
+    ports:
+      - "6379:6379"
+    volumes:
+      - redis_data:/data
+    healthcheck:
+      test: ["CMD", "redis-cli", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  api:
+    build: ./apps/api
+    ports:
+      - "8000:8000"
+    depends_on:
+      postgres:
+        condition: service_healthy
+      redis:
+        condition: service_healthy
+    environment:
+      APP_ENV: local
+      LOG_LEVEL: INFO
+      API_HOST: "0.0.0.0"
+      API_PORT: "8000"
+      POSTGRES_URL: "postgresql+asyncpg://mandate_guardian:mandate_guardian@postgres:5432/mandate_guardian"
+      REDIS_URL: "redis://redis:6379/0"
+      HMAC_PEPPER: "docker-compose-dev-secret"
+    volumes:
+      - ./apps/api:/app
+    command: uv run uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
+
+  web:
+    build: ./apps/web
+    ports:
+      - "3000:3000"
+    depends_on:
+      api:
+        condition: service_started
+    environment:
+      NEXT_PUBLIC_API_BASE_URL: "http://localhost:8000"
+    volumes:
+      - ./apps/web:/app
+      - /app/node_modules
+      - /app/.next
+    command: npm run dev -- --hostname 0.0.0.0
+
+volumes:
+  postgres_data:
+  redis_data:

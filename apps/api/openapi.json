@@ -1,0 +1,1836 @@
+{
+  "openapi": "3.1.0",
+  "info": {
+    "title": "Mandate Guardian API",
+    "description": "Merchant-layer, explainable UPI mandate-risk controls.",
+    "version": "0.1.0"
+  },
+  "paths": {
+    "/v1/v1/risk-sessions": {
+      "post": {
+        "tags": [
+          "risk-sessions"
+        ],
+        "summary": "Create Risk Session",
+        "description": "Create a new risk session or return existing one on idempotent replay.",
+        "operationId": "create_risk_session_v1_v1_risk_sessions_post",
+        "parameters": [
+          {
+            "name": "x-forwarded-for",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Forwarded-For"
+            }
+          },
+          {
+            "name": "user-agent",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User-Agent"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RiskSessionCreateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "201": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskSession"
+                }
+              }
+            }
+          },
+          "200": {
+            "description": "Idempotent replay",
+            "headers": {
+              "X-Idempotent-Replay": {
+                "schema": {
+                  "type": "string"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/v1/risk-sessions/{risk_session_id}/telemetry": {
+      "patch": {
+        "tags": [
+          "risk-sessions"
+        ],
+        "summary": "Record Telemetry",
+        "description": "Record telemetry and transition session to READY.",
+        "operationId": "record_telemetry_v1_v1_risk_sessions__risk_session_id__telemetry_patch",
+        "parameters": [
+          {
+            "name": "risk_session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Risk Session Id"
+            }
+          },
+          {
+            "name": "x-forwarded-for",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "X-Forwarded-For"
+            }
+          },
+          {
+            "name": "user-agent",
+            "in": "header",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "User-Agent"
+            }
+          }
+        ],
+        "requestBody": {
+          "required": true,
+          "content": {
+            "application/json": {
+              "schema": {
+                "$ref": "#/components/schemas/RiskSessionTelemetryUpdateRequest"
+              }
+            }
+          }
+        },
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskSession"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Risk session not found"
+          },
+          "409": {
+            "description": "Risk session is already consumed"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/v1/risk-sessions/{risk_session_id}/precheck": {
+      "post": {
+        "tags": [
+          "risk-sessions"
+        ],
+        "summary": "Request Precheck",
+        "description": "Request a pre-registration risk assessment.",
+        "operationId": "request_precheck_v1_v1_risk_sessions__risk_session_id__precheck_post",
+        "parameters": [
+          {
+            "name": "risk_session_id",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Risk Session Id"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/RiskAssessment"
+                }
+              }
+            }
+          },
+          "404": {
+            "description": "Risk session not found"
+          },
+          "409": {
+            "description": "Risk session telemetry is not ready / inconsistent state"
+          },
+          "503": {
+            "description": "Precheck evaluator is unavailable"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/healthz": {
+      "get": {
+        "summary": "Healthz",
+        "description": "Liveness probe \u2014 always returns OK if the process is running.",
+        "operationId": "healthz_healthz_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Healthz Healthz Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/readyz": {
+      "get": {
+        "summary": "Readyz",
+        "description": "Readiness probe \u2014 configuration-only in A0.\n\nA1/A4 may later add actual Postgres/Redis checks without changing\nthe response shape.",
+        "operationId": "readyz_readyz_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "additionalProperties": {
+                    "type": "string"
+                  },
+                  "type": "object",
+                  "title": "Response Readyz Readyz Get"
+                }
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "components": {
+    "schemas": {
+      "Decision": {
+        "description": "Outcome of a risk evaluation.",
+        "enum": [
+          "ALLOW",
+          "CHALLENGE",
+          "BLOCK"
+        ],
+        "title": "Decision",
+        "type": "string"
+      },
+      "DecisionStage": {
+        "description": "The phase of the mandate lifecycle at which the decision was made.",
+        "enum": [
+          "PRECHECK",
+          "POST_CONFIRMATION",
+          "REJECTION_AUDIT"
+        ],
+        "title": "DecisionStage",
+        "type": "string"
+      },
+      "HTTPValidationError": {
+        "properties": {
+          "detail": {
+            "items": {
+              "$ref": "#/components/schemas/ValidationError"
+            },
+            "type": "array",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "title": "HTTPValidationError"
+      },
+      "MandateIntent": {
+        "additionalProperties": false,
+        "description": "The mandate parameters the customer intends to register.",
+        "examples": [
+          {
+            "expire_at": "2027-01-15T10:00:00Z",
+            "frequency": "monthly",
+            "max_amount_paise": 500000
+          }
+        ],
+        "properties": {
+          "max_amount_paise": {
+            "anyOf": [
+              {
+                "maximum": 10000000,
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Max Amount Paise"
+          },
+          "frequency": {
+            "anyOf": [
+              {
+                "maxLength": 32,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Frequency"
+          },
+          "expire_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Expire At"
+          }
+        },
+        "title": "MandateIntent",
+        "type": "object"
+      },
+      "RiskAssessment": {
+        "additionalProperties": false,
+        "description": "Immutable risk assessment produced by the rule engine.",
+        "examples": [
+          {
+            "assessed_at": "2026-01-15T10:02:03Z",
+            "assessment_id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80",
+            "decision": "BLOCK",
+            "engine_version": "rules-v1",
+            "evaluation_latency_ms": 12,
+            "feature_snapshot_id": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+            "mandate_event_id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+            "risk_session_id": null,
+            "rule_evaluations": [
+              {
+                "points": 25,
+                "reason_code": "IP_VELOCITY_5M",
+                "reason_text": "IP address seen in 15 registrations in 5 minutes.",
+                "rule_id": "ip_velocity_5m_high",
+                "triggered": true
+              }
+            ],
+            "schema_version": "1.0",
+            "score": 85,
+            "stage": "POST_CONFIRMATION"
+          }
+        ],
+        "properties": {
+          "schema_version": {
+            "default": "1.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "assessment_id": {
+            "format": "uuid",
+            "title": "Assessment Id",
+            "type": "string"
+          },
+          "risk_session_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Risk Session Id"
+          },
+          "mandate_event_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Mandate Event Id"
+          },
+          "feature_snapshot_id": {
+            "format": "uuid",
+            "title": "Feature Snapshot Id",
+            "type": "string"
+          },
+          "stage": {
+            "$ref": "#/components/schemas/DecisionStage"
+          },
+          "score": {
+            "maximum": 100,
+            "minimum": 0,
+            "title": "Score",
+            "type": "integer"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "engine_version": {
+            "default": "rules-v1",
+            "title": "Engine Version",
+            "type": "string"
+          },
+          "rule_evaluations": {
+            "items": {
+              "$ref": "#/components/schemas/RuleEvaluation"
+            },
+            "minItems": 1,
+            "title": "Rule Evaluations",
+            "type": "array"
+          },
+          "evaluation_latency_ms": {
+            "maximum": 60000,
+            "minimum": 0,
+            "title": "Evaluation Latency Ms",
+            "type": "integer"
+          },
+          "assessed_at": {
+            "format": "date-time",
+            "title": "Assessed At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "feature_snapshot_id",
+          "stage",
+          "score",
+          "decision",
+          "rule_evaluations",
+          "evaluation_latency_ms",
+          "assessed_at"
+        ],
+        "title": "RiskAssessment",
+        "type": "object"
+      },
+      "RiskSession": {
+        "additionalProperties": false,
+        "description": "Pseudonymised risk session \u2014 the output contract.\n\nNever contains raw customer_reference, raw IP, raw device fingerprint or\nraw user-agent. Only HMAC hashes of those values are stored.",
+        "examples": [
+          {
+            "checkout_order_ref": "order_demo_001",
+            "created_at": "2026-01-15T10:00:00Z",
+            "customer_reference_hash": "hmac-sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+            "device_fingerprint_hash": null,
+            "flow_completed_at": "2026-01-15T10:05:00Z",
+            "flow_started_at": "2026-01-15T10:00:00Z",
+            "ip_hash": null,
+            "mandate_intent": {
+              "expire_at": "2027-01-15T10:00:00Z",
+              "frequency": "monthly",
+              "max_amount_paise": 500000
+            },
+            "merchant_namespace": "demo-merchant-01",
+            "risk_session_id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+            "schema_version": "1.0",
+            "status": "CREATED",
+            "updated_at": "2026-01-15T10:00:00Z",
+            "user_agent_hash": null
+          }
+        ],
+        "properties": {
+          "schema_version": {
+            "default": "1.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "risk_session_id": {
+            "format": "uuid",
+            "title": "Risk Session Id",
+            "type": "string"
+          },
+          "merchant_namespace": {
+            "title": "Merchant Namespace",
+            "type": "string"
+          },
+          "checkout_order_ref": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Checkout Order Ref"
+          },
+          "customer_reference_hash": {
+            "anyOf": [
+              {
+                "description": "HMAC-SHA256 pseudonymised value: 'hmac-sha256:' followed by 64 hex chars.",
+                "pattern": "^hmac-sha256:[a-f0-9]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Customer Reference Hash"
+          },
+          "ip_hash": {
+            "anyOf": [
+              {
+                "description": "HMAC-SHA256 pseudonymised value: 'hmac-sha256:' followed by 64 hex chars.",
+                "pattern": "^hmac-sha256:[a-f0-9]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Ip Hash"
+          },
+          "device_fingerprint_hash": {
+            "anyOf": [
+              {
+                "description": "HMAC-SHA256 pseudonymised value: 'hmac-sha256:' followed by 64 hex chars.",
+                "pattern": "^hmac-sha256:[a-f0-9]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Device Fingerprint Hash"
+          },
+          "user_agent_hash": {
+            "anyOf": [
+              {
+                "description": "HMAC-SHA256 pseudonymised value: 'hmac-sha256:' followed by 64 hex chars.",
+                "pattern": "^hmac-sha256:[a-f0-9]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "User Agent Hash"
+          },
+          "flow_started_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Flow Started At"
+          },
+          "flow_completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Flow Completed At"
+          },
+          "mandate_intent": {
+            "$ref": "#/components/schemas/MandateIntent"
+          },
+          "status": {
+            "$ref": "#/components/schemas/RiskSessionStatus"
+          },
+          "created_at": {
+            "format": "date-time",
+            "title": "Created At",
+            "type": "string"
+          },
+          "updated_at": {
+            "format": "date-time",
+            "title": "Updated At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "merchant_namespace",
+          "mandate_intent",
+          "status",
+          "created_at",
+          "updated_at"
+        ],
+        "title": "RiskSession",
+        "type": "object"
+      },
+      "RiskSessionCreateRequest": {
+        "additionalProperties": false,
+        "description": "Request body to create a new checkout risk session.",
+        "examples": [
+          {
+            "checkout_order_ref": "order_demo_001",
+            "customer_reference": "cust_demo_ref_sensitive",
+            "device_fingerprint": "fp_ab12cd34ef56gh78",
+            "flow_started_at": "2026-01-15T10:00:00Z",
+            "mandate_intent": {
+              "expire_at": "2027-01-15T10:00:00Z",
+              "frequency": "monthly",
+              "max_amount_paise": 500000
+            },
+            "merchant_namespace": "demo-merchant-01"
+          }
+        ],
+        "properties": {
+          "merchant_namespace": {
+            "pattern": "^[a-z][a-z0-9_-]{2,63}$",
+            "title": "Merchant Namespace",
+            "type": "string"
+          },
+          "checkout_order_ref": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Checkout Order Ref"
+          },
+          "customer_reference": {
+            "anyOf": [
+              {
+                "maxLength": 256,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Customer Reference",
+            "writeOnly": true
+          },
+          "device_fingerprint": {
+            "anyOf": [
+              {
+                "maxLength": 512,
+                "minLength": 8,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Device Fingerprint",
+            "writeOnly": true
+          },
+          "flow_started_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Flow Started At"
+          },
+          "mandate_intent": {
+            "$ref": "#/components/schemas/MandateIntent"
+          }
+        },
+        "required": [
+          "merchant_namespace",
+          "mandate_intent"
+        ],
+        "title": "RiskSessionCreateRequest",
+        "type": "object"
+      },
+      "RiskSessionStatus": {
+        "description": "Lifecycle status of a checkout risk session.",
+        "enum": [
+          "CREATED",
+          "READY",
+          "CONSUMED",
+          "EXPIRED"
+        ],
+        "title": "RiskSessionStatus",
+        "type": "string"
+      },
+      "RiskSessionTelemetryUpdateRequest": {
+        "additionalProperties": false,
+        "description": "Partial update for telemetry captured during the checkout flow.",
+        "examples": [
+          {
+            "client_ip": "192.168.1.100",
+            "client_user_agent": "Mozilla/5.0 (Linux; Android 14)",
+            "device_fingerprint": "fp_ab12cd34ef56gh78",
+            "flow_completed_at": "2026-01-15T10:05:00Z",
+            "is_vpn_claimed": false
+          }
+        ],
+        "properties": {
+          "device_fingerprint": {
+            "anyOf": [
+              {
+                "maxLength": 512,
+                "minLength": 8,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Device Fingerprint"
+          },
+          "flow_completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Flow Completed At"
+          },
+          "client_user_agent": {
+            "anyOf": [
+              {
+                "maxLength": 512,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Client User Agent"
+          },
+          "client_ip": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Client Ip"
+          },
+          "is_vpn_claimed": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Is Vpn Claimed"
+          }
+        },
+        "title": "RiskSessionTelemetryUpdateRequest",
+        "type": "object"
+      },
+      "RuleEvaluation": {
+        "additionalProperties": false,
+        "description": "Result of evaluating a single rule against a feature snapshot.",
+        "examples": [
+          {
+            "points": 25,
+            "reason_code": "IP_VELOCITY_5M",
+            "reason_text": "IP address seen in 15 registrations in the last 5 minutes.",
+            "rule_id": "ip_velocity_5m_high",
+            "triggered": true
+          }
+        ],
+        "properties": {
+          "rule_id": {
+            "pattern": "^[a-z][a-z0-9_]{2,63}$",
+            "title": "Rule Id",
+            "type": "string"
+          },
+          "triggered": {
+            "title": "Triggered",
+            "type": "boolean"
+          },
+          "points": {
+            "maximum": 100,
+            "minimum": 0,
+            "title": "Points",
+            "type": "integer"
+          },
+          "reason_code": {
+            "anyOf": [
+              {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Reason Code"
+          },
+          "reason_text": {
+            "anyOf": [
+              {
+                "maxLength": 240,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Reason Text"
+          }
+        },
+        "required": [
+          "rule_id",
+          "triggered",
+          "points"
+        ],
+        "title": "RuleEvaluation",
+        "type": "object"
+      },
+      "ValidationError": {
+        "properties": {
+          "loc": {
+            "items": {
+              "anyOf": [
+                {
+                  "type": "string"
+                },
+                {
+                  "type": "integer"
+                }
+              ]
+            },
+            "type": "array",
+            "title": "Location"
+          },
+          "msg": {
+            "type": "string",
+            "title": "Message"
+          },
+          "type": {
+            "type": "string",
+            "title": "Error Type"
+          },
+          "input": {
+            "title": "Input"
+          },
+          "ctx": {
+            "type": "object",
+            "title": "Context"
+          }
+        },
+        "type": "object",
+        "required": [
+          "loc",
+          "msg",
+          "type"
+        ],
+        "title": "ValidationError"
+      },
+      "ActionAttempt": {
+        "additionalProperties": false,
+        "description": "A single attempt to execute a queued action.\n\n``safe_error_message`` must never be a raw upstream body.",
+        "examples": [
+          {
+            "action_attempt_id": "f6a7b8c9-d0e1-4f2a-3b4c-5d6e7f809102",
+            "action_request_id": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8091",
+            "attempt_number": 1,
+            "attempted_at": "2026-01-15T10:02:05Z",
+            "completed_at": null,
+            "provider_status_code": 503,
+            "safe_error_code": "PROVIDER_UNAVAILABLE",
+            "safe_error_message": "Token revoke service temporarily unavailable.",
+            "schema_version": "1.0",
+            "status": "RETRYING"
+          }
+        ],
+        "properties": {
+          "schema_version": {
+            "default": "1.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "action_attempt_id": {
+            "format": "uuid",
+            "title": "Action Attempt Id",
+            "type": "string"
+          },
+          "action_request_id": {
+            "format": "uuid",
+            "title": "Action Request Id",
+            "type": "string"
+          },
+          "attempt_number": {
+            "maximum": 100,
+            "minimum": 1,
+            "title": "Attempt Number",
+            "type": "integer"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ActionStatus"
+          },
+          "provider_status_code": {
+            "anyOf": [
+              {
+                "maximum": 599,
+                "minimum": 100,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Provider Status Code"
+          },
+          "safe_error_code": {
+            "anyOf": [
+              {
+                "maxLength": 80,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Safe Error Code"
+          },
+          "safe_error_message": {
+            "anyOf": [
+              {
+                "maxLength": 240,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Safe Error Message"
+          },
+          "attempted_at": {
+            "format": "date-time",
+            "title": "Attempted At",
+            "type": "string"
+          },
+          "completed_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Completed At"
+          }
+        },
+        "required": [
+          "action_request_id",
+          "attempt_number",
+          "status",
+          "attempted_at"
+        ],
+        "title": "ActionAttempt",
+        "type": "object"
+      },
+      "ActionRequest": {
+        "additionalProperties": false,
+        "description": "A queued request for a downstream action (e.g. token revocation).",
+        "examples": [
+          {
+            "action_request_id": "e5f6a7b8-c9d0-4e1f-2a3b-4c5d6e7f8091",
+            "action_type": "TOKEN_REVOKE",
+            "assessment_id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80",
+            "idempotency_key": "revoke-token_demo123-d4e5f6a7",
+            "mandate_event_id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+            "requested_at": "2026-01-15T10:02:04Z",
+            "schema_version": "1.0",
+            "status": "QUEUED",
+            "token_id": "token_demo123"
+          }
+        ],
+        "properties": {
+          "schema_version": {
+            "default": "1.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "action_request_id": {
+            "format": "uuid",
+            "title": "Action Request Id",
+            "type": "string"
+          },
+          "assessment_id": {
+            "format": "uuid",
+            "title": "Assessment Id",
+            "type": "string"
+          },
+          "mandate_event_id": {
+            "format": "uuid",
+            "title": "Mandate Event Id",
+            "type": "string"
+          },
+          "action_type": {
+            "$ref": "#/components/schemas/ActionType"
+          },
+          "token_id": {
+            "pattern": "^token_[A-Za-z0-9]+$",
+            "title": "Token Id",
+            "type": "string"
+          },
+          "idempotency_key": {
+            "pattern": "^[a-z0-9_-]{16,128}$",
+            "title": "Idempotency Key",
+            "type": "string"
+          },
+          "status": {
+            "$ref": "#/components/schemas/ActionStatus"
+          },
+          "requested_at": {
+            "format": "date-time",
+            "title": "Requested At",
+            "type": "string"
+          }
+        },
+        "required": [
+          "assessment_id",
+          "mandate_event_id",
+          "action_type",
+          "token_id",
+          "idempotency_key",
+          "status",
+          "requested_at"
+        ],
+        "title": "ActionRequest",
+        "type": "object"
+      },
+      "ActionStatus": {
+        "description": "Lifecycle status of an action request or attempt.",
+        "enum": [
+          "QUEUED",
+          "IN_PROGRESS",
+          "SUCCEEDED",
+          "RETRYING",
+          "FAILED",
+          "NOT_REQUIRED"
+        ],
+        "title": "ActionStatus",
+        "type": "string"
+      },
+      "ActionType": {
+        "description": "Types of downstream actions the system can request.",
+        "enum": [
+          "TOKEN_REVOKE"
+        ],
+        "title": "ActionType",
+        "type": "string"
+      },
+      "AuditActorType": {
+        "description": "Who or what created an audit event.",
+        "enum": [
+          "SYSTEM",
+          "WEBHOOK",
+          "WORKER",
+          "OPERATOR",
+          "DEMO"
+        ],
+        "title": "AuditActorType",
+        "type": "string"
+      },
+      "AuditEvent": {
+        "additionalProperties": false,
+        "description": "Immutable, hash-chained audit event.\n\nThe first event in an aggregate has ``previous_event_hash=None``;\nsubsequent events require it. A1 determines hash generation.",
+        "examples": [
+          {
+            "actor_id": null,
+            "actor_type": "SYSTEM",
+            "aggregate_id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80",
+            "aggregate_type": "risk_assessment",
+            "audit_event_id": "a7b8c9d0-e1f2-4a3b-4c5d-6e7f80910213",
+            "event_hash": "sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+            "event_type": "risk_assessment.created",
+            "occurred_at": "2026-01-15T10:02:03Z",
+            "previous_event_hash": null,
+            "redacted_payload": {
+              "decision": "BLOCK",
+              "score": 85
+            },
+            "schema_version": "1.0",
+            "sequence_number": 1
+          }
+        ],
+        "properties": {
+          "schema_version": {
+            "default": "1.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "audit_event_id": {
+            "format": "uuid",
+            "title": "Audit Event Id",
+            "type": "string"
+          },
+          "aggregate_type": {
+            "enum": [
+              "risk_session",
+              "mandate_event",
+              "risk_assessment",
+              "action_request"
+            ],
+            "title": "Aggregate Type",
+            "type": "string"
+          },
+          "aggregate_id": {
+            "format": "uuid",
+            "title": "Aggregate Id",
+            "type": "string"
+          },
+          "sequence_number": {
+            "minimum": 1,
+            "title": "Sequence Number",
+            "type": "integer"
+          },
+          "event_type": {
+            "pattern": "^[a-z][a-z0-9_.]{2,100}$",
+            "title": "Event Type",
+            "type": "string"
+          },
+          "actor_type": {
+            "$ref": "#/components/schemas/AuditActorType"
+          },
+          "actor_id": {
+            "anyOf": [
+              {
+                "maxLength": 128,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Actor Id"
+          },
+          "occurred_at": {
+            "format": "date-time",
+            "title": "Occurred At",
+            "type": "string"
+          },
+          "redacted_payload": {
+            "additionalProperties": true,
+            "title": "Redacted Payload",
+            "type": "object"
+          },
+          "previous_event_hash": {
+            "anyOf": [
+              {
+                "description": "SHA-256 hash prefixed with 'sha256:'.",
+                "pattern": "^sha256:[a-f0-9]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Previous Event Hash"
+          },
+          "event_hash": {
+            "description": "SHA-256 hash prefixed with 'sha256:'.",
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "title": "Event Hash",
+            "type": "string"
+          }
+        },
+        "required": [
+          "aggregate_type",
+          "aggregate_id",
+          "sequence_number",
+          "event_type",
+          "actor_type",
+          "occurred_at",
+          "redacted_payload",
+          "event_hash"
+        ],
+        "title": "AuditEvent",
+        "type": "object"
+      },
+      "Availability": {
+        "description": "Whether a feature source was available at evaluation time.",
+        "enum": [
+          "AVAILABLE",
+          "MISSING",
+          "NOT_APPLICABLE",
+          "DEMO_SIMULATED"
+        ],
+        "title": "Availability",
+        "type": "string"
+      },
+      "ContractModel": {
+        "additionalProperties": false,
+        "description": "Base model for all canonical API and event contracts.\n\nEnforces:\n- ``extra=\"forbid\"`` to reject undeclared fields.\n- ``populate_by_name=True`` for flexible construction.\n- ``str_strip_whitespace=True`` to normalise string inputs.\n- JSON-mode serialisation of UUIDs and datetimes.",
+        "properties": {},
+        "title": "ContractModel",
+        "type": "object"
+      },
+      "FeatureSnapshot": {
+        "additionalProperties": false,
+        "description": "Immutable point-in-time feature vector for a mandate event or session.\n\nAll feature calculations must be explicit, typed and named. This model\ncarries the shape without computation logic.",
+        "examples": [
+          {
+            "calculated_at": "2026-01-15T10:02:02Z",
+            "customer_velocity_1h": 1,
+            "device_velocity_1h": 4,
+            "device_velocity_5m": 2,
+            "expiry_days_from_registration": 365,
+            "feature_snapshot_id": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+            "feature_version": "rules-v1",
+            "flow_duration_seconds": 45,
+            "ip_velocity_1h": 5,
+            "ip_velocity_5m": 3,
+            "is_demo_simulation": false,
+            "is_new_device_for_customer": false,
+            "mandate_event_id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+            "mandate_frequency": "monthly",
+            "max_amount_paise": 500000,
+            "network_reputation_score": 20,
+            "network_vpn_or_proxy": false,
+            "npci_risk_flag": false,
+            "payer_bank_or_compliance_flag": false,
+            "risk_session_id": null,
+            "schema_version": "1.0",
+            "shared_demo_merchant_count_1h": null,
+            "sources": {
+              "ip_velocity_5m": {
+                "availability": "AVAILABLE",
+                "captured_at": "2026-01-15T10:02:01Z",
+                "source": "redis-sliding-window"
+              }
+            },
+            "user_agent_bot_suspected": false,
+            "vpa_velocity_1h": 1
+          }
+        ],
+        "properties": {
+          "schema_version": {
+            "default": "1.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "feature_snapshot_id": {
+            "format": "uuid",
+            "title": "Feature Snapshot Id",
+            "type": "string"
+          },
+          "mandate_event_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Mandate Event Id"
+          },
+          "risk_session_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Risk Session Id"
+          },
+          "feature_version": {
+            "default": "rules-v1",
+            "title": "Feature Version",
+            "type": "string"
+          },
+          "calculated_at": {
+            "format": "date-time",
+            "title": "Calculated At",
+            "type": "string"
+          },
+          "ip_velocity_5m": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Ip Velocity 5M"
+          },
+          "ip_velocity_1h": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Ip Velocity 1H"
+          },
+          "device_velocity_5m": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Device Velocity 5M"
+          },
+          "device_velocity_1h": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Device Velocity 1H"
+          },
+          "customer_velocity_1h": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Customer Velocity 1H"
+          },
+          "vpa_velocity_1h": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Vpa Velocity 1H"
+          },
+          "shared_demo_merchant_count_1h": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Shared Demo Merchant Count 1H"
+          },
+          "is_new_device_for_customer": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Is New Device For Customer"
+          },
+          "flow_duration_seconds": {
+            "anyOf": [
+              {
+                "maximum": 86400,
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Flow Duration Seconds"
+          },
+          "user_agent_bot_suspected": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "User Agent Bot Suspected"
+          },
+          "network_vpn_or_proxy": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Network Vpn Or Proxy"
+          },
+          "network_reputation_score": {
+            "anyOf": [
+              {
+                "maximum": 100,
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Network Reputation Score"
+          },
+          "npci_risk_flag": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Npci Risk Flag"
+          },
+          "payer_bank_or_compliance_flag": {
+            "anyOf": [
+              {
+                "type": "boolean"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Payer Bank Or Compliance Flag"
+          },
+          "max_amount_paise": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Max Amount Paise"
+          },
+          "mandate_frequency": {
+            "anyOf": [
+              {
+                "maxLength": 32,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Mandate Frequency"
+          },
+          "expiry_days_from_registration": {
+            "anyOf": [
+              {
+                "minimum": 0,
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Expiry Days From Registration"
+          },
+          "sources": {
+            "additionalProperties": {
+              "$ref": "#/components/schemas/FeatureSource"
+            },
+            "title": "Sources",
+            "type": "object"
+          },
+          "is_demo_simulation": {
+            "default": false,
+            "title": "Is Demo Simulation",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "calculated_at",
+          "sources"
+        ],
+        "title": "FeatureSnapshot",
+        "type": "object"
+      },
+      "FeatureSource": {
+        "additionalProperties": false,
+        "description": "Describes the provenance and availability of a single feature value.\n\nWhen availability is ``AVAILABLE`` or ``DEMO_SIMULATED``, ``captured_at``\nis required. Otherwise it must be ``None``.",
+        "examples": [
+          {
+            "availability": "AVAILABLE",
+            "captured_at": "2026-01-15T10:01:00Z",
+            "source": "redis-sliding-window"
+          }
+        ],
+        "properties": {
+          "availability": {
+            "$ref": "#/components/schemas/Availability"
+          },
+          "source": {
+            "maxLength": 80,
+            "minLength": 1,
+            "title": "Source",
+            "type": "string"
+          },
+          "captured_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Captured At"
+          }
+        },
+        "required": [
+          "availability",
+          "source"
+        ],
+        "title": "FeatureSource",
+        "type": "object"
+      },
+      "MandateEventType": {
+        "description": "Razorpay webhook event types for recurring mandates.",
+        "enum": [
+          "token.confirmed",
+          "token.rejected",
+          "token.cancelled"
+        ],
+        "title": "MandateEventType",
+        "type": "string"
+      },
+      "MandateWebhookEvent": {
+        "additionalProperties": false,
+        "description": "Normalised mandate webhook event \u2014 no raw payload or raw VPA.",
+        "examples": [
+          {
+            "event_type": "token.confirmed",
+            "failure_reason": null,
+            "is_demo_event": true,
+            "mandate_event_id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+            "provider": "razorpay",
+            "provider_created_at": "2026-01-15T10:02:00Z",
+            "provider_event_id": "evt_demo_confirmed_001",
+            "raw_payload_sha256": "sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+            "received_at": "2026-01-15T10:02:01Z",
+            "recurring_status": "confirmed",
+            "risk_session_id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+            "schema_version": "1.0",
+            "token_id": "token_demo123",
+            "vpa_handle": "upi",
+            "vpa_hash": "hmac-sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa"
+          }
+        ],
+        "properties": {
+          "schema_version": {
+            "default": "1.0",
+            "title": "Schema Version",
+            "type": "string"
+          },
+          "mandate_event_id": {
+            "format": "uuid",
+            "title": "Mandate Event Id",
+            "type": "string"
+          },
+          "provider": {
+            "const": "razorpay",
+            "default": "razorpay",
+            "title": "Provider",
+            "type": "string"
+          },
+          "provider_event_id": {
+            "maxLength": 128,
+            "minLength": 1,
+            "title": "Provider Event Id",
+            "type": "string"
+          },
+          "event_type": {
+            "$ref": "#/components/schemas/MandateEventType"
+          },
+          "token_id": {
+            "pattern": "^token_[A-Za-z0-9]+$",
+            "title": "Token Id",
+            "type": "string"
+          },
+          "risk_session_id": {
+            "anyOf": [
+              {
+                "format": "uuid",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Risk Session Id"
+          },
+          "vpa_hash": {
+            "anyOf": [
+              {
+                "description": "HMAC-SHA256 pseudonymised value: 'hmac-sha256:' followed by 64 hex chars.",
+                "pattern": "^hmac-sha256:[a-f0-9]{64}$",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Vpa Hash"
+          },
+          "vpa_handle": {
+            "anyOf": [
+              {
+                "maxLength": 100,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Vpa Handle"
+          },
+          "recurring_status": {
+            "anyOf": [
+              {
+                "maxLength": 64,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Recurring Status"
+          },
+          "failure_reason": {
+            "anyOf": [
+              {
+                "maxLength": 500,
+                "minLength": 1,
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Failure Reason"
+          },
+          "provider_created_at": {
+            "anyOf": [
+              {
+                "format": "date-time",
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "default": null,
+            "title": "Provider Created At"
+          },
+          "received_at": {
+            "format": "date-time",
+            "title": "Received At",
+            "type": "string"
+          },
+          "raw_payload_sha256": {
+            "pattern": "^sha256:[a-f0-9]{64}$",
+            "title": "Raw Payload Sha256",
+            "type": "string"
+          },
+          "is_demo_event": {
+            "default": false,
+            "title": "Is Demo Event",
+            "type": "boolean"
+          }
+        },
+        "required": [
+          "provider_event_id",
+          "event_type",
+          "token_id",
+          "received_at",
+          "raw_payload_sha256"
+        ],
+        "title": "MandateWebhookEvent",
+        "type": "object"
+      }
+    }
+  }
+}

@@ -1,0 +1,6 @@
+{
+  "merchant_namespace": "INVALID-UPPER",
+  "mandate_intent": {
+    "max_amount_paise": 500000
+  }
+}

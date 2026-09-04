@@ -1,0 +1,78 @@
+{
+  "schema_version": "1.0",
+  "feature_snapshot_id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80",
+  "mandate_event_id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+  "risk_session_id": null,
+  "feature_version": "rules-v1",
+  "calculated_at": "2026-01-15T10:02:02Z",
+  "ip_velocity_5m": 15,
+  "ip_velocity_1h": 42,
+  "device_velocity_5m": 12,
+  "device_velocity_1h": 35,
+  "customer_velocity_1h": 8,
+  "vpa_velocity_1h": 5,
+  "shared_demo_merchant_count_1h": 3,
+  "is_new_device_for_customer": true,
+  "flow_duration_seconds": 2,
+  "user_agent_bot_suspected": true,
+  "network_vpn_or_proxy": true,
+  "network_reputation_score": 90,
+  "npci_risk_flag": false,
+  "payer_bank_or_compliance_flag": false,
+  "max_amount_paise": 1000000,
+  "mandate_frequency": "weekly",
+  "expiry_days_from_registration": 365,
+  "sources": {
+    "ip_velocity_5m": {
+      "availability": "AVAILABLE",
+      "source": "redis-sliding-window",
+      "captured_at": "2026-01-15T10:02:01Z"
+    },
+    "ip_velocity_1h": {
+      "availability": "AVAILABLE",
+      "source": "redis-sliding-window",
+      "captured_at": "2026-01-15T10:02:01Z"
+    },
+    "device_velocity_5m": {
+      "availability": "AVAILABLE",
+      "source": "redis-sliding-window",
+      "captured_at": "2026-01-15T10:02:01Z"
+    },
+    "device_velocity_1h": {
+      "availability": "AVAILABLE",
+      "source": "redis-sliding-window",
+      "captured_at": "2026-01-15T10:02:01Z"
+    },
+    "customer_velocity_1h": {
+      "availability": "AVAILABLE",
+      "source": "redis-sliding-window",
+      "captured_at": "2026-01-15T10:02:01Z"
+    },
+    "vpa_velocity_1h": {
+      "availability": "AVAILABLE",
+      "source": "redis-sliding-window",
+      "captured_at": "2026-01-15T10:02:01Z"
+    },
+    "shared_demo_merchant_count_1h": {
+      "availability": "DEMO_SIMULATED",
+      "source": "demo-shared-namespace",
+      "captured_at": "2026-01-15T10:02:01Z"
+    },
+    "flow_duration_seconds": {
+      "availability": "AVAILABLE",
+      "source": "session-telemetry",
+      "captured_at": "2026-01-15T10:02:01Z"
+    },
+    "network_vpn_or_proxy": {
+      "availability": "AVAILABLE",
+      "source": "ip-reputation-api",
+      "captured_at": "2026-01-15T10:02:01Z"
+    },
+    "user_agent_bot_suspected": {
+      "availability": "AVAILABLE",
+      "source": "ua-parser",
+      "captured_at": "2026-01-15T10:02:01Z"
+    }
+  },
+  "is_demo_simulation": true
+}

@@ -1,0 +1,20 @@
+{
+  "schema_version": "1.0",
+  "risk_session_id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+  "merchant_namespace": "demo-merchant-01",
+  "checkout_order_ref": "order_demo_001",
+  "customer_reference_hash": "hmac-sha256:aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa",
+  "ip_hash": "hmac-sha256:bbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbbb",
+  "device_fingerprint_hash": "hmac-sha256:cccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccccc",
+  "user_agent_hash": "hmac-sha256:dddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddddd",
+  "flow_started_at": "2026-01-15T10:00:00Z",
+  "flow_completed_at": "2026-01-15T10:05:00Z",
+  "mandate_intent": {
+    "max_amount_paise": 500000,
+    "frequency": "monthly",
+    "expire_at": "2027-01-15T10:00:00Z"
+  },
+  "status": "CREATED",
+  "created_at": "2026-01-15T10:00:00Z",
+  "updated_at": "2026-01-15T10:00:00Z"
+}
