@@ -1,0 +1,12 @@
+{
+  "allow_clean.json": {"valid": true},
+  "challenge_velocity.json": {"valid": true},
+  "block_bot_burst.json": {"valid": true},
+  "block_npci_rejection.json": {"valid": true},
+  "payer_bank_rejection.json": {"valid": true},
+  "clamped_over_100.json": {"valid": true},
+  "threshold_29.json": {"valid": true},
+  "threshold_30.json": {"valid": true},
+  "threshold_69.json": {"valid": true},
+  "threshold_70.json": {"valid": true}
+}

@@ -1,6 +1,12 @@
 {
   "name": "bot_burst",
   "title": "Bot burst",
-  "placeholder": true,
-  "note": "A9 will complete this definition exactly as specified in docs/work-packages/A9_SIMULATOR_AND_SCENARIOS.md section 5."
+  "description": "24 registrations sharing one device and the same peer IP with a 2-second flow.",
+  "expected_outcome": "At least 18 of 24 sessions challenged; the first 4 borderline ALLOWs are explained.",
+  "params": {
+    "namespace": "demo_bot_burst",
+    "sessions": 24,
+    "shared_device": true,
+    "flow_seconds": 2
+  }
 }

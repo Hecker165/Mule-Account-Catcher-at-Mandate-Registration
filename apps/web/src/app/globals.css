@@ -1,1 +1,16 @@
-/* A7 will add Tailwind base/components/utilities and the shared demo styling. */
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* Shared demo styling: calm neutrals, honest demo labelling. */
+
+body {
+  background-color: #f8fafc;
+  color: #0f172a;
+  font-family: ui-sans-serif, system-ui, sans-serif;
+}
+
+.demo-note {
+  font-size: 0.75rem;
+  color: #64748b;
+}

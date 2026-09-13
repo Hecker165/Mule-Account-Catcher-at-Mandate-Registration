@@ -6,14 +6,14 @@
     "version": "0.1.0"
   },
   "paths": {
-    "/v1/v1/risk-sessions": {
+    "/v1/risk-sessions": {
       "post": {
         "tags": [
           "risk-sessions"
         ],
         "summary": "Create Risk Session",
         "description": "Create a new risk session or return existing one on idempotent replay.",
-        "operationId": "create_risk_session_v1_v1_risk_sessions_post",
+        "operationId": "create_risk_session_v1_risk_sessions_post",
         "parameters": [
           {
             "name": "x-forwarded-for",
@@ -92,14 +92,14 @@
         }
       }
     },
-    "/v1/v1/risk-sessions/{risk_session_id}/telemetry": {
+    "/v1/risk-sessions/{risk_session_id}/telemetry": {
       "patch": {
         "tags": [
           "risk-sessions"
         ],
         "summary": "Record Telemetry",
         "description": "Record telemetry and transition session to READY.",
-        "operationId": "record_telemetry_v1_v1_risk_sessions__risk_session_id__telemetry_patch",
+        "operationId": "record_telemetry_v1_risk_sessions__risk_session_id__telemetry_patch",
         "parameters": [
           {
             "name": "risk_session_id",
@@ -184,14 +184,14 @@
         }
       }
     },
-    "/v1/v1/risk-sessions/{risk_session_id}/precheck": {
+    "/v1/risk-sessions/{risk_session_id}/precheck": {
       "post": {
         "tags": [
           "risk-sessions"
         ],
         "summary": "Request Precheck",
         "description": "Request a pre-registration risk assessment.",
-        "operationId": "request_precheck_v1_v1_risk_sessions__risk_session_id__precheck_post",
+        "operationId": "request_precheck_v1_risk_sessions__risk_session_id__precheck_post",
         "parameters": [
           {
             "name": "risk_session_id",
@@ -223,6 +223,310 @@
           },
           "503": {
             "description": "Precheck evaluator is unavailable"
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/webhooks/razorpay": {
+      "post": {
+        "tags": [
+          "razorpay-webhooks"
+        ],
+        "summary": "Razorpay Webhook",
+        "description": "Verify, normalise and ingest one Razorpay webhook delivery.",
+        "operationId": "razorpay_webhook_v1_webhooks_razorpay_post",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {}
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dashboard/assessments": {
+      "get": {
+        "tags": [
+          "dashboard"
+        ],
+        "summary": "List Assessments",
+        "description": "Return the newest redacted assessment projections, newest first.",
+        "operationId": "list_assessments_v1_dashboard_assessments_get",
+        "parameters": [
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 100,
+              "minimum": 1,
+              "default": 50,
+              "title": "Limit"
+            }
+          },
+          {
+            "name": "offset",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "minimum": 0,
+              "default": 0,
+              "title": "Offset"
+            }
+          },
+          {
+            "name": "decision",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "anyOf": [
+                {
+                  "$ref": "#/components/schemas/Decision"
+                },
+                {
+                  "type": "null"
+                }
+              ],
+              "title": "Decision"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/DashboardAssessmentsResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dashboard/audit-events": {
+      "get": {
+        "tags": [
+          "dashboard"
+        ],
+        "summary": "List Audit Events",
+        "description": "Return one aggregate's audit chain, newest first (A1 payloads as-is).",
+        "operationId": "list_audit_events_v1_dashboard_audit_events_get",
+        "parameters": [
+          {
+            "name": "aggregate_type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "enum": [
+                "risk_session",
+                "mandate_event",
+                "risk_assessment",
+                "action_request"
+              ],
+              "type": "string",
+              "title": "Aggregate Type"
+            }
+          },
+          {
+            "name": "aggregate_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Aggregate Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 500,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "type": "array",
+                  "items": {
+                    "$ref": "#/components/schemas/DashboardAuditItem"
+                  },
+                  "title": "Response List Audit Events V1 Dashboard Audit Events Get"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/dashboard/audit-events/verify": {
+      "get": {
+        "tags": [
+          "dashboard"
+        ],
+        "summary": "Verify Audit Events",
+        "description": "Verify one aggregate's full audit chain (missing aggregates verify valid/zero).",
+        "operationId": "verify_audit_events_v1_dashboard_audit_events_verify_get",
+        "parameters": [
+          {
+            "name": "aggregate_type",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "enum": [
+                "risk_session",
+                "mandate_event",
+                "risk_assessment",
+                "action_request"
+              ],
+              "type": "string",
+              "title": "Aggregate Type"
+            }
+          },
+          {
+            "name": "aggregate_id",
+            "in": "query",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "format": "uuid",
+              "title": "Aggregate Id"
+            }
+          },
+          {
+            "name": "limit",
+            "in": "query",
+            "required": false,
+            "schema": {
+              "type": "integer",
+              "maximum": 500,
+              "minimum": 1,
+              "default": 100,
+              "title": "Limit"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/AuditVerificationResponse"
+                }
+              }
+            }
+          },
+          "422": {
+            "description": "Validation Error",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/HTTPValidationError"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/demo/scenarios": {
+      "get": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "List Demo Scenarios",
+        "description": "List exactly the seven demo scenarios.",
+        "operationId": "list_demo_scenarios_v1_demo_scenarios_get",
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioListResponse"
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "/v1/demo/scenarios/{name}/run": {
+      "post": {
+        "tags": [
+          "demo"
+        ],
+        "summary": "Run Demo Scenario",
+        "description": "Execute one scenario synchronously and return its per-check verdict.",
+        "operationId": "run_demo_scenario_v1_demo_scenarios__name__run_post",
+        "parameters": [
+          {
+            "name": "name",
+            "in": "path",
+            "required": true,
+            "schema": {
+              "type": "string",
+              "title": "Name"
+            }
+          }
+        ],
+        "responses": {
+          "200": {
+            "description": "Successful Response",
+            "content": {
+              "application/json": {
+                "schema": {
+                  "$ref": "#/components/schemas/ScenarioRunResponse"
+                }
+              }
+            }
           },
           "422": {
             "description": "Validation Error",
@@ -286,6 +590,292 @@
   },
   "components": {
     "schemas": {
+      "ActionStatus": {
+        "description": "Lifecycle status of an action request or attempt.",
+        "enum": [
+          "QUEUED",
+          "IN_PROGRESS",
+          "SUCCEEDED",
+          "RETRYING",
+          "FAILED",
+          "NOT_REQUIRED"
+        ],
+        "title": "ActionStatus",
+        "type": "string"
+      },
+      "AuditActorType": {
+        "description": "Who or what created an audit event.",
+        "enum": [
+          "SYSTEM",
+          "WEBHOOK",
+          "WORKER",
+          "OPERATOR",
+          "DEMO"
+        ],
+        "title": "AuditActorType",
+        "type": "string"
+      },
+      "AuditVerificationResponse": {
+        "properties": {
+          "valid": {
+            "type": "boolean",
+            "title": "Valid"
+          },
+          "checked_events": {
+            "type": "integer",
+            "title": "Checked Events"
+          },
+          "first_invalid_sequence": {
+            "anyOf": [
+              {
+                "type": "integer"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "First Invalid Sequence"
+          },
+          "reason": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason"
+          }
+        },
+        "type": "object",
+        "required": [
+          "valid",
+          "checked_events"
+        ],
+        "title": "AuditVerificationResponse"
+      },
+      "DashboardAssessmentItem": {
+        "properties": {
+          "assessment_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Assessment Id"
+          },
+          "decision": {
+            "$ref": "#/components/schemas/Decision"
+          },
+          "score": {
+            "type": "integer",
+            "title": "Score"
+          },
+          "stage": {
+            "$ref": "#/components/schemas/DecisionStage"
+          },
+          "assessed_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Assessed At"
+          },
+          "evaluation_latency_ms": {
+            "type": "integer",
+            "title": "Evaluation Latency Ms"
+          },
+          "token_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Token Id"
+          },
+          "vpa_handle": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Vpa Handle"
+          },
+          "is_demo_event": {
+            "type": "boolean",
+            "title": "Is Demo Event",
+            "default": false
+          },
+          "action_status": {
+            "anyOf": [
+              {
+                "$ref": "#/components/schemas/ActionStatus"
+              },
+              {
+                "type": "null"
+              }
+            ]
+          },
+          "reasons": {
+            "items": {
+              "$ref": "#/components/schemas/DashboardReasonItem"
+            },
+            "type": "array",
+            "title": "Reasons"
+          }
+        },
+        "type": "object",
+        "required": [
+          "assessment_id",
+          "decision",
+          "score",
+          "stage",
+          "assessed_at",
+          "evaluation_latency_ms"
+        ],
+        "title": "DashboardAssessmentItem",
+        "examples": [
+          {
+            "action_status": "SUCCEEDED",
+            "assessed_at": "2026-01-15T10:02:03Z",
+            "assessment_id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80",
+            "decision": "BLOCK",
+            "evaluation_latency_ms": 12,
+            "is_demo_event": false,
+            "reasons": [
+              {
+                "points": 25,
+                "reason_code": "DEVICE_VELOCITY_BURST",
+                "reason_text": "Device made 7 registrations in 5 minutes.",
+                "rule_id": "velocity_device_burst"
+              }
+            ],
+            "score": 80,
+            "stage": "POST_CONFIRMATION",
+            "token_id": "token_demo123",
+            "vpa_handle": "upi"
+          }
+        ]
+      },
+      "DashboardAssessmentsResponse": {
+        "properties": {
+          "items": {
+            "items": {
+              "$ref": "#/components/schemas/DashboardAssessmentItem"
+            },
+            "type": "array",
+            "title": "Items"
+          },
+          "limit": {
+            "type": "integer",
+            "title": "Limit"
+          },
+          "offset": {
+            "type": "integer",
+            "title": "Offset"
+          }
+        },
+        "type": "object",
+        "required": [
+          "items",
+          "limit",
+          "offset"
+        ],
+        "title": "DashboardAssessmentsResponse"
+      },
+      "DashboardAuditItem": {
+        "properties": {
+          "audit_event_id": {
+            "type": "string",
+            "format": "uuid",
+            "title": "Audit Event Id"
+          },
+          "sequence_number": {
+            "type": "integer",
+            "title": "Sequence Number"
+          },
+          "event_type": {
+            "type": "string",
+            "title": "Event Type"
+          },
+          "actor_type": {
+            "$ref": "#/components/schemas/AuditActorType"
+          },
+          "actor_id": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Actor Id"
+          },
+          "occurred_at": {
+            "type": "string",
+            "format": "date-time",
+            "title": "Occurred At"
+          },
+          "redacted_payload": {
+            "additionalProperties": true,
+            "type": "object",
+            "title": "Redacted Payload"
+          }
+        },
+        "type": "object",
+        "required": [
+          "audit_event_id",
+          "sequence_number",
+          "event_type",
+          "actor_type",
+          "occurred_at",
+          "redacted_payload"
+        ],
+        "title": "DashboardAuditItem"
+      },
+      "DashboardReasonItem": {
+        "properties": {
+          "rule_id": {
+            "type": "string",
+            "title": "Rule Id"
+          },
+          "reason_code": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason Code"
+          },
+          "reason_text": {
+            "anyOf": [
+              {
+                "type": "string"
+              },
+              {
+                "type": "null"
+              }
+            ],
+            "title": "Reason Text"
+          },
+          "points": {
+            "type": "integer",
+            "title": "Points",
+            "default": 0
+          }
+        },
+        "type": "object",
+        "required": [
+          "rule_id"
+        ],
+        "title": "DashboardReasonItem"
+      },
       "Decision": {
         "description": "Outcome of a risk evaluation.",
         "enum": [
@@ -903,6 +1493,113 @@
         "title": "RuleEvaluation",
         "type": "object"
       },
+      "ScenarioCheckItem": {
+        "properties": {
+          "check": {
+            "type": "string",
+            "title": "Check"
+          },
+          "passed": {
+            "type": "boolean",
+            "title": "Passed"
+          },
+          "detail": {
+            "type": "string",
+            "title": "Detail"
+          }
+        },
+        "type": "object",
+        "required": [
+          "check",
+          "passed",
+          "detail"
+        ],
+        "title": "ScenarioCheckItem"
+      },
+      "ScenarioListResponse": {
+        "properties": {
+          "scenarios": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioSummaryItem"
+            },
+            "type": "array",
+            "title": "Scenarios"
+          }
+        },
+        "type": "object",
+        "required": [
+          "scenarios"
+        ],
+        "title": "ScenarioListResponse"
+      },
+      "ScenarioRunResponse": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "status": {
+            "type": "string",
+            "title": "Status"
+          },
+          "started_at": {
+            "type": "string",
+            "title": "Started At"
+          },
+          "finished_at": {
+            "type": "string",
+            "title": "Finished At"
+          },
+          "duration_ms": {
+            "type": "integer",
+            "title": "Duration Ms"
+          },
+          "checks": {
+            "items": {
+              "$ref": "#/components/schemas/ScenarioCheckItem"
+            },
+            "type": "array",
+            "title": "Checks"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "status",
+          "started_at",
+          "finished_at",
+          "duration_ms"
+        ],
+        "title": "ScenarioRunResponse"
+      },
+      "ScenarioSummaryItem": {
+        "properties": {
+          "name": {
+            "type": "string",
+            "title": "Name"
+          },
+          "title": {
+            "type": "string",
+            "title": "Title"
+          },
+          "description": {
+            "type": "string",
+            "title": "Description"
+          },
+          "expected_outcome": {
+            "type": "string",
+            "title": "Expected Outcome"
+          }
+        },
+        "type": "object",
+        "required": [
+          "name",
+          "title",
+          "description",
+          "expected_outcome"
+        ],
+        "title": "ScenarioSummaryItem"
+      },
       "ValidationError": {
         "properties": {
           "loc": {
@@ -1126,37 +1823,12 @@
         "title": "ActionRequest",
         "type": "object"
       },
-      "ActionStatus": {
-        "description": "Lifecycle status of an action request or attempt.",
-        "enum": [
-          "QUEUED",
-          "IN_PROGRESS",
-          "SUCCEEDED",
-          "RETRYING",
-          "FAILED",
-          "NOT_REQUIRED"
-        ],
-        "title": "ActionStatus",
-        "type": "string"
-      },
       "ActionType": {
         "description": "Types of downstream actions the system can request.",
         "enum": [
           "TOKEN_REVOKE"
         ],
         "title": "ActionType",
-        "type": "string"
-      },
-      "AuditActorType": {
-        "description": "Who or what created an audit event.",
-        "enum": [
-          "SYSTEM",
-          "WEBHOOK",
-          "WORKER",
-          "OPERATOR",
-          "DEMO"
-        ],
-        "title": "AuditActorType",
         "type": "string"
       },
       "AuditEvent": {

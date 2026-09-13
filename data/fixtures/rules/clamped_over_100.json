@@ -1,0 +1,51 @@
+{
+  "description": "Every all-stage rule fires at once (180 raw points) and the total clamps to exactly 100: BLOCK.",
+  "stage": "POST_CONFIRMATION",
+  "snapshot": {
+    "schema_version": "1.0",
+    "feature_snapshot_id": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+    "mandate_event_id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+    "risk_session_id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "feature_version": "rules-v1",
+    "calculated_at": "2026-01-15T10:00:00Z",
+    "ip_velocity_5m": 6,
+    "ip_velocity_1h": 25,
+    "device_velocity_5m": 6,
+    "device_velocity_1h": 25,
+    "customer_velocity_1h": 12,
+    "vpa_velocity_1h": 12,
+    "shared_demo_merchant_count_1h": 4,
+    "is_new_device_for_customer": true,
+    "flow_duration_seconds": 2,
+    "user_agent_bot_suspected": null,
+    "network_vpn_or_proxy": true,
+    "network_reputation_score": 10,
+    "npci_risk_flag": null,
+    "payer_bank_or_compliance_flag": null,
+    "max_amount_paise": 6000000,
+    "mandate_frequency": "monthly",
+    "expiry_days_from_registration": 365,
+    "sources": {
+      "ip_velocity_5m": {"availability": "AVAILABLE", "source": "redis_velocity:ip:5m", "captured_at": "2026-01-15T10:00:00Z"},
+      "is_new_device_for_customer": {"availability": "AVAILABLE", "source": "redis_known_devices", "captured_at": "2026-01-15T10:00:00Z"},
+      "shared_demo_merchant_count_1h": {"availability": "DEMO_SIMULATED", "source": "redis_demo_shared_merchants", "captured_at": "2026-01-15T10:00:00Z"},
+      "max_amount_paise": {"availability": "AVAILABLE", "source": "risk_session", "captured_at": "2026-01-15T10:00:00Z"}
+    },
+    "is_demo_simulation": true
+  },
+  "expected": {
+    "score": 100,
+    "decision": "BLOCK",
+    "triggered_rule_ids": [
+      "velocity_ip_burst",
+      "velocity_device_burst",
+      "velocity_customer_burst",
+      "velocity_vpa_burst",
+      "new_device_for_established_customer",
+      "implausible_flow_duration",
+      "network_anonymity",
+      "demo_shared_merchant_velocity",
+      "unusual_mandate_terms"
+    ]
+  }
+}

@@ -1,6 +1,17 @@
 {
   "name": "confirmed_high_risk_block",
-  "title": "Confirmed high-risk mandate",
-  "placeholder": true,
-  "note": "A9 will complete this definition exactly as specified in docs/work-packages/A9_SIMULATOR_AND_SCENARIOS.md section 5."
+  "title": "Confirmed high-risk block",
+  "description": "Velocity seeding in one namespace, then a confirmed webhook correlated via order notes.",
+  "expected_outcome": "BLOCK with a valid audit chain and exactly one queued revocation.",
+  "params": {
+    "fixture": "token_confirmed_body.json",
+    "event_id_prefix": "evt_demo_block_",
+    "demo_header": true,
+    "seed": {
+      "namespace": "demo_high_risk",
+      "sessions": 21,
+      "shared_device": true,
+      "flow_seconds": 30
+    }
+  }
 }

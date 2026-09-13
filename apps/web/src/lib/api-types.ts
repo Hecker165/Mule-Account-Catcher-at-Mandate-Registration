@@ -4,7 +4,7 @@
  */
 
 export interface paths {
-    "/v1/v1/risk-sessions": {
+    "/v1/risk-sessions": {
         parameters: {
             query?: never;
             header?: never;
@@ -17,14 +17,14 @@ export interface paths {
          * Create Risk Session
          * @description Create a new risk session or return existing one on idempotent replay.
          */
-        post: operations["create_risk_session_v1_v1_risk_sessions_post"];
+        post: operations["create_risk_session_v1_risk_sessions_post"];
         delete?: never;
         options?: never;
         head?: never;
         patch?: never;
         trace?: never;
     };
-    "/v1/v1/risk-sessions/{risk_session_id}/telemetry": {
+    "/v1/risk-sessions/{risk_session_id}/telemetry": {
         parameters: {
             query?: never;
             header?: never;
@@ -41,10 +41,10 @@ export interface paths {
          * Record Telemetry
          * @description Record telemetry and transition session to READY.
          */
-        patch: operations["record_telemetry_v1_v1_risk_sessions__risk_session_id__telemetry_patch"];
+        patch: operations["record_telemetry_v1_risk_sessions__risk_session_id__telemetry_patch"];
         trace?: never;
     };
-    "/v1/v1/risk-sessions/{risk_session_id}/precheck": {
+    "/v1/risk-sessions/{risk_session_id}/precheck": {
         parameters: {
             query?: never;
             header?: never;
@@ -57,7 +57,127 @@ export interface paths {
          * Request Precheck
          * @description Request a pre-registration risk assessment.
          */
-        post: operations["request_precheck_v1_v1_risk_sessions__risk_session_id__precheck_post"];
+        post: operations["request_precheck_v1_risk_sessions__risk_session_id__precheck_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/webhooks/razorpay": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Razorpay Webhook
+         * @description Verify, normalise and ingest one Razorpay webhook delivery.
+         */
+        post: operations["razorpay_webhook_v1_webhooks_razorpay_post"];
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/dashboard/assessments": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Assessments
+         * @description Return the newest redacted assessment projections, newest first.
+         */
+        get: operations["list_assessments_v1_dashboard_assessments_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/dashboard/audit-events": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Audit Events
+         * @description Return one aggregate's audit chain, newest first (A1 payloads as-is).
+         */
+        get: operations["list_audit_events_v1_dashboard_audit_events_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/dashboard/audit-events/verify": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * Verify Audit Events
+         * @description Verify one aggregate's full audit chain (missing aggregates verify valid/zero).
+         */
+        get: operations["verify_audit_events_v1_dashboard_audit_events_verify_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/demo/scenarios": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        /**
+         * List Demo Scenarios
+         * @description List exactly the seven demo scenarios.
+         */
+        get: operations["list_demo_scenarios_v1_demo_scenarios_get"];
+        put?: never;
+        post?: never;
+        delete?: never;
+        options?: never;
+        head?: never;
+        patch?: never;
+        trace?: never;
+    };
+    "/v1/demo/scenarios/{name}/run": {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        get?: never;
+        put?: never;
+        /**
+         * Run Demo Scenario
+         * @description Execute one scenario synchronously and return its per-check verdict.
+         */
+        post: operations["run_demo_scenario_v1_demo_scenarios__name__run_post"];
         delete?: never;
         options?: never;
         head?: never;
@@ -111,6 +231,129 @@ export interface paths {
 export type webhooks = Record<string, never>;
 export interface components {
     schemas: {
+        /**
+         * ActionStatus
+         * @description Lifecycle status of an action request or attempt.
+         * @enum {string}
+         */
+        ActionStatus: "QUEUED" | "IN_PROGRESS" | "SUCCEEDED" | "RETRYING" | "FAILED" | "NOT_REQUIRED";
+        /**
+         * AuditActorType
+         * @description Who or what created an audit event.
+         * @enum {string}
+         */
+        AuditActorType: "SYSTEM" | "WEBHOOK" | "WORKER" | "OPERATOR" | "DEMO";
+        /** AuditVerificationResponse */
+        AuditVerificationResponse: {
+            /** Valid */
+            valid: boolean;
+            /** Checked Events */
+            checked_events: number;
+            /** First Invalid Sequence */
+            first_invalid_sequence?: number | null;
+            /** Reason */
+            reason?: string | null;
+        };
+        /**
+         * DashboardAssessmentItem
+         * @example {
+         *       "action_status": "SUCCEEDED",
+         *       "assessed_at": "2026-01-15T10:02:03Z",
+         *       "assessment_id": "d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80",
+         *       "decision": "BLOCK",
+         *       "evaluation_latency_ms": 12,
+         *       "is_demo_event": false,
+         *       "reasons": [
+         *         {
+         *           "points": 25,
+         *           "reason_code": "DEVICE_VELOCITY_BURST",
+         *           "reason_text": "Device made 7 registrations in 5 minutes.",
+         *           "rule_id": "velocity_device_burst"
+         *         }
+         *       ],
+         *       "score": 80,
+         *       "stage": "POST_CONFIRMATION",
+         *       "token_id": "token_demo123",
+         *       "vpa_handle": "upi"
+         *     }
+         */
+        DashboardAssessmentItem: {
+            /**
+             * Assessment Id
+             * Format: uuid
+             */
+            assessment_id: string;
+            decision: components["schemas"]["Decision"];
+            /** Score */
+            score: number;
+            stage: components["schemas"]["DecisionStage"];
+            /**
+             * Assessed At
+             * Format: date-time
+             */
+            assessed_at: string;
+            /** Evaluation Latency Ms */
+            evaluation_latency_ms: number;
+            /** Token Id */
+            token_id?: string | null;
+            /** Vpa Handle */
+            vpa_handle?: string | null;
+            /**
+             * Is Demo Event
+             * @default false
+             */
+            is_demo_event: boolean;
+            action_status?: components["schemas"]["ActionStatus"] | null;
+            /** Reasons */
+            reasons?: components["schemas"]["DashboardReasonItem"][];
+        };
+        /** DashboardAssessmentsResponse */
+        DashboardAssessmentsResponse: {
+            /** Items */
+            items: components["schemas"]["DashboardAssessmentItem"][];
+            /** Limit */
+            limit: number;
+            /** Offset */
+            offset: number;
+        };
+        /** DashboardAuditItem */
+        DashboardAuditItem: {
+            /**
+             * Audit Event Id
+             * Format: uuid
+             */
+            audit_event_id: string;
+            /** Sequence Number */
+            sequence_number: number;
+            /** Event Type */
+            event_type: string;
+            actor_type: components["schemas"]["AuditActorType"];
+            /** Actor Id */
+            actor_id?: string | null;
+            /**
+             * Occurred At
+             * Format: date-time
+             */
+            occurred_at: string;
+            /** Redacted Payload */
+            redacted_payload: {
+                [key: string]: unknown;
+            };
+        };
+        /** DashboardReasonItem */
+        DashboardReasonItem: {
+            /** Rule Id */
+            rule_id: string;
+            /** Reason Code */
+            reason_code?: string | null;
+            /** Reason Text */
+            reason_text?: string | null;
+            /**
+             * Points
+             * @default 0
+             */
+            points: number;
+        };
         /**
          * Decision
          * @description Outcome of a risk evaluation.
@@ -427,6 +670,46 @@ export interface components {
              */
             reason_text: string | null;
         };
+        /** ScenarioCheckItem */
+        ScenarioCheckItem: {
+            /** Check */
+            check: string;
+            /** Passed */
+            passed: boolean;
+            /** Detail */
+            detail: string;
+        };
+        /** ScenarioListResponse */
+        ScenarioListResponse: {
+            /** Scenarios */
+            scenarios: components["schemas"]["ScenarioSummaryItem"][];
+        };
+        /** ScenarioRunResponse */
+        ScenarioRunResponse: {
+            /** Name */
+            name: string;
+            /** Status */
+            status: string;
+            /** Started At */
+            started_at: string;
+            /** Finished At */
+            finished_at: string;
+            /** Duration Ms */
+            duration_ms: number;
+            /** Checks */
+            checks?: components["schemas"]["ScenarioCheckItem"][];
+        };
+        /** ScenarioSummaryItem */
+        ScenarioSummaryItem: {
+            /** Name */
+            name: string;
+            /** Title */
+            title: string;
+            /** Description */
+            description: string;
+            /** Expected Outcome */
+            expected_outcome: string;
+        };
         /** ValidationError */
         ValidationError: {
             /** Location */
@@ -552,23 +835,11 @@ export interface components {
             requested_at: string;
         };
         /**
-         * ActionStatus
-         * @description Lifecycle status of an action request or attempt.
-         * @enum {string}
-         */
-        ActionStatus: "QUEUED" | "IN_PROGRESS" | "SUCCEEDED" | "RETRYING" | "FAILED" | "NOT_REQUIRED";
-        /**
          * ActionType
          * @description Types of downstream actions the system can request.
          * @enum {string}
          */
         ActionType: "TOKEN_REVOKE";
-        /**
-         * AuditActorType
-         * @description Who or what created an audit event.
-         * @enum {string}
-         */
-        AuditActorType: "SYSTEM" | "WEBHOOK" | "WORKER" | "OPERATOR" | "DEMO";
         /**
          * AuditEvent
          * @description Immutable, hash-chained audit event.
@@ -950,7 +1221,7 @@ export interface components {
 }
 export type $defs = Record<string, never>;
 export interface operations {
-    create_risk_session_v1_v1_risk_sessions_post: {
+    create_risk_session_v1_risk_sessions_post: {
         parameters: {
             query?: never;
             header?: {
@@ -994,7 +1265,7 @@ export interface operations {
             };
         };
     };
-    record_telemetry_v1_v1_risk_sessions__risk_session_id__telemetry_patch: {
+    record_telemetry_v1_risk_sessions__risk_session_id__telemetry_patch: {
         parameters: {
             query?: never;
             header?: {
@@ -1046,7 +1317,7 @@ export interface operations {
             };
         };
     };
-    request_precheck_v1_v1_risk_sessions__risk_session_id__precheck_post: {
+    request_precheck_v1_risk_sessions__risk_session_id__precheck_post: {
         parameters: {
             query?: never;
             header?: never;
@@ -1095,6 +1366,176 @@ export interface operations {
                     [name: string]: unknown;
                 };
                 content?: never;
+            };
+        };
+    };
+    razorpay_webhook_v1_webhooks_razorpay_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": unknown;
+                };
+            };
+        };
+    };
+    list_assessments_v1_dashboard_assessments_get: {
+        parameters: {
+            query?: {
+                limit?: number;
+                offset?: number;
+                decision?: components["schemas"]["Decision"] | null;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardAssessmentsResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_audit_events_v1_dashboard_audit_events_get: {
+        parameters: {
+            query: {
+                aggregate_type: "risk_session" | "mandate_event" | "risk_assessment" | "action_request";
+                aggregate_id: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["DashboardAuditItem"][];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    verify_audit_events_v1_dashboard_audit_events_verify_get: {
+        parameters: {
+            query: {
+                aggregate_type: "risk_session" | "mandate_event" | "risk_assessment" | "action_request";
+                aggregate_id: string;
+                limit?: number;
+            };
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["AuditVerificationResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
+            };
+        };
+    };
+    list_demo_scenarios_v1_demo_scenarios_get: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path?: never;
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScenarioListResponse"];
+                };
+            };
+        };
+    };
+    run_demo_scenario_v1_demo_scenarios__name__run_post: {
+        parameters: {
+            query?: never;
+            header?: never;
+            path: {
+                name: string;
+            };
+            cookie?: never;
+        };
+        requestBody?: never;
+        responses: {
+            /** @description Successful Response */
+            200: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["ScenarioRunResponse"];
+                };
+            };
+            /** @description Validation Error */
+            422: {
+                headers: {
+                    [name: string]: unknown;
+                };
+                content: {
+                    "application/json": components["schemas"]["HTTPValidationError"];
+                };
             };
         };
     };

@@ -1,2 +1,11 @@
-// A7 Tailwind configuration (content paths: src/**/*.{ts,tsx}).
-export default {};
+import type { Config } from "tailwindcss";
+
+const config: Config = {
+  content: ["./src/**/*.{ts,tsx}"],
+  theme: {
+    extend: {},
+  },
+  plugins: [],
+};
+
+export default config;

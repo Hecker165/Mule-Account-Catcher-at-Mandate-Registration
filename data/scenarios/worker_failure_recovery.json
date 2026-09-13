@@ -1,6 +1,19 @@
 {
   "name": "worker_failure_recovery",
   "title": "Worker failure and recovery",
-  "placeholder": true,
-  "note": "A9 will complete this definition exactly as specified in docs/work-packages/A9_SIMULATOR_AND_SCENARIOS.md section 5."
+  "description": "One scheduled mock revoke failure, then retry and success.",
+  "expected_outcome": "First attempt RETRYING, final SUCCEEDED, exactly two attempts, no duplicate revocation.",
+  "params": {
+    "fixture": "token_confirmed_body.json",
+    "event_id_prefix": "evt_demo_recovery_",
+    "demo_header": true,
+    "seed": {
+      "namespace": "demo_worker_recovery",
+      "sessions": 21,
+      "shared_device": true,
+      "flow_seconds": 30
+    },
+    "scheduled_failures": 1,
+    "poll_timeout_seconds": 30
+  }
 }

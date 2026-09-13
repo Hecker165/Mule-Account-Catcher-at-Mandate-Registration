@@ -1,6 +1,12 @@
 {
   "name": "duplicate_webhook",
   "title": "Duplicate webhook",
-  "placeholder": true,
-  "note": "A9 will complete this definition exactly as specified in docs/work-packages/A9_SIMULATOR_AND_SCENARIOS.md section 5."
+  "description": "The same signed payload delivered twice.",
+  "expected_outcome": "One event, one assessment and one revoke: the replay is acknowledged as a duplicate.",
+  "params": {
+    "fixture": "token_confirmed_body.json",
+    "event_id_prefix": "evt_demo_dup_",
+    "demo_header": true,
+    "deliveries": 2
+  }
 }

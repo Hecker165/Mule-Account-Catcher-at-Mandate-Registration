@@ -24,6 +24,7 @@ dev = [
   "ruff>=0.8,<1.0",
   "mypy>=1.13,<2.0",
   "types-redis>=4.6,<5.0",
+  "fakeredis>=2.24,<3.0",
 ]
 
 [tool.ruff]

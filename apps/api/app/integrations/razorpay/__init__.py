@@ -1,1 +1,23 @@
-"""A6 Razorpay integration package: typed token-revoke client with mock mode (see docs/work-packages/A6_REVOKE_ADAPTER_AND_OUTBOX_WORKER.md)."""
+"""A6 Razorpay integration package: typed token-revoke client with mock mode."""
+
+from app.integrations.razorpay.client import RazorpayTokenRevokeClient, TokenRevokeClient
+from app.integrations.razorpay.mock_client import MockRevokeCall, MockTokenRevokeClient
+from app.integrations.razorpay.types import (
+    RevokeOutcome,
+    RevokeResult,
+    classify_status,
+    result_for_status,
+    result_for_transport,
+)
+
+__all__ = [
+    "MockRevokeCall",
+    "MockTokenRevokeClient",
+    "RazorpayTokenRevokeClient",
+    "RevokeOutcome",
+    "RevokeResult",
+    "TokenRevokeClient",
+    "classify_status",
+    "result_for_status",
+    "result_for_transport",
+]

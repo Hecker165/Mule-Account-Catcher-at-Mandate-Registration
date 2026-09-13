@@ -1,0 +1,41 @@
+{
+  "description": "Threshold edge 29: one synthetic 29-point rule. ALLOW in every stage.",
+  "stage": "PRECHECK",
+  "snapshot": {
+    "schema_version": "1.0",
+    "feature_snapshot_id": "c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f",
+    "mandate_event_id": "b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e",
+    "risk_session_id": "a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d",
+    "feature_version": "rules-v1",
+    "calculated_at": "2026-01-15T10:00:00Z",
+    "ip_velocity_5m": null,
+    "ip_velocity_1h": null,
+    "device_velocity_5m": null,
+    "device_velocity_1h": null,
+    "customer_velocity_1h": null,
+    "vpa_velocity_1h": null,
+    "shared_demo_merchant_count_1h": null,
+    "is_new_device_for_customer": null,
+    "flow_duration_seconds": null,
+    "user_agent_bot_suspected": null,
+    "network_vpn_or_proxy": null,
+    "network_reputation_score": null,
+    "npci_risk_flag": null,
+    "payer_bank_or_compliance_flag": null,
+    "max_amount_paise": null,
+    "mandate_frequency": null,
+    "expiry_days_from_registration": null,
+    "sources": {},
+    "is_demo_simulation": false
+  },
+  "expected": {
+    "score": 29,
+    "decision": "ALLOW",
+    "triggered_rule_ids": ["synthetic_threshold"],
+    "expected_by_stage": {
+      "PRECHECK": "ALLOW",
+      "POST_CONFIRMATION": "ALLOW",
+      "REJECTION_AUDIT": "ALLOW"
+    }
+  }
+}
