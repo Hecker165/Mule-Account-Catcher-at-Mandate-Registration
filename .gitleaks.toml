@@ -1,0 +1,14 @@
+# Gitleaks configuration (A10): extend the default rules and allowlist the
+# two known false positives. Both matches are *idempotency keys* for the
+# revocation outbox (A6 contract field `idempotency_key`), not API
+# credentials: one in a unit test fixture string, one in the A5 spec prose.
+# Everything else keeps the default gitleaks rules.
+[extend]
+useDefault = true
+
+[allowlist]
+description = "Outbox idempotency-key fixtures and spec prose (not credentials)"
+paths = [
+  '''apps/api/tests/unit/test_outbox_worker\.py''',
+  '''docs/work-packages/A5_RULE_ENGINE_AND_EVALUATION\.md''',
+]

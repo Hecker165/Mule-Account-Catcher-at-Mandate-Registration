@@ -1,4 +1,221 @@
-# A10 owns the CI workflow. This file exists to reserve the integration path.
-name: CI
-on: [push]
-jobs: {}
+# A10: continuous integration.
+# Gates on every push to main and every pull request:
+#   api        lint/format/types, fast tests (unit+contract+security), then
+#              integration+performance against PostgreSQL/Redis services
+#   web        lint, unit tests, production build
+#   contracts  regenerate openapi.json + api-types.ts; fail on any diff
+#              (stale contract artifacts never merge)
+#   security   gitleaks secret scan + dependency audit report (npm audit is
+#              reported, not blocking, for the buildathon)
+#   compose    docker compose config validation
+#   e2e        full stack (PostgreSQL + Redis + API + web) + Playwright
+# Secrets are dummy local values only (local-test-secret, mandate_guardian).
+# Note: a CI file is only proven by a pipeline run; the green run on the A10
+# PR/push is the acceptance evidence.
+name: ci
+
+on:
+  push:
+    branches: [main]
+  pull_request:
+
+jobs:
+  api:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: mandate_guardian
+          POSTGRES_PASSWORD: mandate_guardian
+          POSTGRES_DB: mandate_guardian
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U mandate_guardian"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_POSTGRES_URL: postgresql+asyncpg://mandate_guardian:mandate_guardian@localhost:5432/mandate_guardian
+      TEST_REDIS_URL: redis://localhost:6379/15
+      RAZORPAY_WEBHOOK_SECRET: local-test-secret
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+      - name: Sync dependencies
+        run: uv --directory apps/api sync --all-groups
+      - name: Ruff lint
+        run: uv --directory apps/api run ruff check app tests
+      - name: Ruff format check
+        run: uv --directory apps/api run ruff format --check app tests
+      - name: Mypy
+        run: uv --directory apps/api run mypy app
+      # Fast phase: no database needed for unit/contract/security tests.
+      - name: Fast tests (contract, unit, security)
+        run: uv --directory apps/api run pytest tests/contract tests/unit tests/security -q
+      # Integration + performance against the service containers.
+      - name: Integration and performance tests
+        run: uv --directory apps/api run pytest tests/integration tests/performance -q
+
+  web:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - name: Install dependencies
+        run: npm --prefix apps/web ci
+      - name: ESLint
+        run: npm --prefix apps/web run lint
+      - name: Unit tests
+        run: npm --prefix apps/web run test
+      - name: Production build
+        run: npm --prefix apps/web run build
+
+  contracts:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+      - name: Install dependencies
+        run: npm --prefix apps/web ci
+      - name: Sync API dependencies
+        run: uv --directory apps/api sync --all-groups
+      - name: Export OpenAPI
+        run: uv --directory apps/api run python ../../scripts/export_openapi.py
+      - name: Generate browser types
+        run: npm --prefix apps/web run generate:api
+      # Contract-freshness gate: a PR with stale openapi.json/api-types.ts fails here.
+      - name: Fail on contract drift
+        run: git diff --exit-code apps/api/openapi.json apps/web/src/lib/api-types.ts
+
+  security:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - name: Gitleaks secret scan
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - name: Install dependencies
+        run: npm --prefix apps/web ci
+      # Reported, not blocking, for the buildathon (documented in the A10 spec).
+      - name: Dependency audit (production deps)
+        run: npm --prefix apps/web audit --omit=dev --audit-level=high
+        continue-on-error: true
+
+  compose:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+      - name: Validate compose file
+        run: docker compose config -q
+
+  e2e:
+    runs-on: ubuntu-latest
+    services:
+      postgres:
+        image: postgres:16-alpine
+        env:
+          POSTGRES_USER: mandate_guardian
+          POSTGRES_PASSWORD: mandate_guardian
+          POSTGRES_DB: mandate_guardian
+        ports: ["5432:5432"]
+        options: >-
+          --health-cmd "pg_isready -U mandate_guardian"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+      redis:
+        image: redis:7-alpine
+        ports: ["6379:6379"]
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 5s
+          --health-timeout 5s
+          --health-retries 10
+    env:
+      TEST_POSTGRES_URL: postgresql+asyncpg://mandate_guardian:mandate_guardian@localhost:5432/mandate_guardian
+      TEST_REDIS_URL: redis://localhost:6379/15
+      RAZORPAY_WEBHOOK_SECRET: local-test-secret
+      NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:8000
+    steps:
+      - uses: actions/checkout@v4
+      - uses: astral-sh/setup-uv@v5
+        with:
+          python-version: "3.12"
+      - uses: actions/setup-node@v4
+        with:
+          node-version: "22"
+          cache: npm
+          cache-dependency-path: apps/web/package-lock.json
+      - name: Sync API dependencies
+        run: uv --directory apps/api sync --all-groups
+      - name: Apply migrations
+        run: uv --directory apps/api run alembic upgrade head
+      # Background API server; the next step waits for /healthz before the
+      # suite starts (long-running servers need explicit readiness waits).
+      - name: Start API server
+        run: uv --directory apps/api run uvicorn app.main:app --host 127.0.0.1 --port 8000 &
+      - name: Wait for API readiness
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS http://127.0.0.1:8000/healthz > /dev/null; then
+              echo "API ready"
+              break
+            fi
+            sleep 1
+            if [ "$i" -eq 60 ]; then echo "API did not become ready"; exit 1; fi
+          done
+      - name: Install web dependencies
+        run: npm --prefix apps/web ci
+      - name: Build web app
+        run: npm --prefix apps/web run build
+      # Background Next.js production server; the next step waits for :3000.
+      # Note: npx resolves the local playwright binary only from the project
+      # directory, so the playwright steps use working-directory: apps/web.
+      - name: Start web server
+        run: npm --prefix apps/web run start &
+      - name: Wait for web readiness
+        run: |
+          for i in $(seq 1 60); do
+            if curl -fsS -o /dev/null http://localhost:3000; then
+              echo "web ready"
+              break
+            fi
+            sleep 1
+            if [ "$i" -eq 60 ]; then echo "web did not become ready"; exit 1; fi
+          done
+      - name: Install Playwright browser
+        working-directory: apps/web
+        run: npx playwright install --with-deps chromium
+      - name: Run Playwright e2e
+        working-directory: apps/web
+        run: npx playwright test

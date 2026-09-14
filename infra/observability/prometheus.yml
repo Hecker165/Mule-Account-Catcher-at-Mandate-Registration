@@ -1,1 +1,13 @@
-# A10 Prometheus scrape configuration for the local stack (scrape the API /metrics endpoint).
+# A10 Prometheus scrape configuration for the local stack.
+# One job scraping the API's /metrics endpoint; 15s interval.
+# No dashboards are required (see README.md in this directory).
+
+scrape_configs:
+  - job_name: mandate-guardian-api
+    metrics_path: /metrics
+    scrape_interval: 15s
+    static_configs:
+      # The API runs on the host; Prometheus runs in a container, so the
+      # host is reachable via host.docker.internal (Docker Desktop).
+      - targets: ["host.docker.internal:8000"]
+

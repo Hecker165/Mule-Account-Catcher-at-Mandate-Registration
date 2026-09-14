@@ -7,7 +7,9 @@ from contextlib import asynccontextmanager
 
 from fastapi import FastAPI, Request, Response
 
-from app.api.routes import dashboard, demo, risk_sessions, webhooks
+from app.api.routes import dashboard, demo, metrics, risk_sessions, webhooks
+from app.core.logging import configure_logging
+from app.core.metrics import request_metrics_middleware
 from app.core.settings import get_settings
 from app.domain.rules.engine import RuleEngine
 from app.integrations.razorpay.client import RazorpayTokenRevokeClient, TokenRevokeClient
@@ -25,6 +27,7 @@ from app.workers.outbox_worker import OutboxWorker
 
 def create_app() -> FastAPI:
     """Create and configure the FastAPI application."""
+    configure_logging()  # A10 (1/3): central logging, once per process
     settings = get_settings()
 
     key_id = settings.razorpay_key_id.get_secret_value() if settings.razorpay_key_id else ""
@@ -80,6 +83,13 @@ def create_app() -> FastAPI:
 
     # A9: demo control API (hidden in production via the route's own guard)
     application.include_router(demo.router, prefix="/v1")
+
+    # A10 (2/3): /metrics without the /v1 prefix (no auth: counters only, no identifiers)
+    application.include_router(metrics.router)
+
+    # A10 (3/3): request metrics middleware (defined in core/metrics.py;
+    # counts + observes duration; never logs, never raises)
+    application.middleware("http")(request_metrics_middleware)
 
     # A5: rule engine composition; replaces the A2/A3 Unavailable* placeholders
     store = RedisFeatureStore.from_settings()
