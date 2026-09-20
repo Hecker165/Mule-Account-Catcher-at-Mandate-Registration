@@ -165,7 +165,6 @@ jobs:
       TEST_POSTGRES_URL: postgresql+asyncpg://mandate_guardian:mandate_guardian@localhost:5432/mandate_guardian
       TEST_REDIS_URL: redis://localhost:6379/15
       RAZORPAY_WEBHOOK_SECRET: local-test-secret
-      NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:8000
     steps:
       - uses: actions/checkout@v4
       - uses: astral-sh/setup-uv@v5
@@ -199,9 +198,15 @@ jobs:
       - name: Build web app
         run: npm --prefix apps/web run build
       # Background Next.js production server; the next step waits for :3000.
+      # NEXT_PUBLIC_API_BASE_URL is set at RUNTIME only (not build): the build
+      # env stays unset so the browser bundle uses the same-origin /api proxy
+      # (the API serves no CORS headers by design); this env pins the server
+      # rewrite target to 127.0.0.1 (avoids localhost IPv6 resolution).
       # Note: npx resolves the local playwright binary only from the project
       # directory, so the playwright steps use working-directory: apps/web.
       - name: Start web server
+        env:
+          NEXT_PUBLIC_API_BASE_URL: http://127.0.0.1:8000
         run: npm --prefix apps/web run start &
       - name: Wait for web readiness
         run: |

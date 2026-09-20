@@ -7,8 +7,12 @@
 useDefault = true
 
 [allowlist]
-description = "Outbox idempotency-key fixtures and spec prose (not credentials)"
+description = "Idempotency-key fixtures/spec prose, and A10's fabricated dummy secrets"
 paths = [
   '''apps/api/tests/unit/test_outbox_worker\.py''',
   '''docs/work-packages/A5_RULE_ENGINE_AND_EVALUATION\.md''',
+  # tests/security/test_log_redaction.py exists to fabricate dummy secret
+  # values ("dummy-key-secret-...", etc.) and prove they never reach logs;
+  # its own fixtures are not credentials.
+  '''apps/api/tests/security/test_log_redaction\.py''',
 ]

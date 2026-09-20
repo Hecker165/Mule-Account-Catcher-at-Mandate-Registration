@@ -196,7 +196,7 @@ test("test_audit_chain_panel_verifies_for_an_assessment", async ({ page, request
   await expect(page.getByText(/Chain verified/)).toBeVisible();
 });
 
-test("test_demo_page_shows_checklist_and_missing_controls_message", async ({ page }) => {
+test("test_demo_page_shows_checklist_and_working_controls", async ({ page }) => {
   await page.goto("/demo");
   for (const name of [
     "Legitimate flow",
@@ -209,5 +209,9 @@ test("test_demo_page_shows_checklist_and_missing_controls_message", async ({ pag
   ]) {
     await expect(page.getByText(name, { exact: false }).first()).toBeVisible();
   }
-  await expect(page.getByText("Automated demo controls are not installed yet")).toBeVisible();
+  // A9's demo control API is live behind the same-origin proxy: the page's
+  // feature detection must report the controls as installed, and the
+  // "not installed" notice must be gone.
+  await expect(page.getByText("Automated demo controls are installed")).toBeVisible();
+  await expect(page.getByText("Automated demo controls are not installed yet")).toHaveCount(0);
 });
